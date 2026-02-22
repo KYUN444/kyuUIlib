@@ -1,0 +1,386 @@
+--[[
+    ZenithUI Example Script
+    Demonstrates ALL features of the library
+]]
+
+-- Load the library (replace URL with your hosted version)
+local ZenithUI = loadstring(game:HttpGet("YOUR_RAW_URL_HERE"))()
+
+-- Or if running locally:
+-- local ZenithUI = require(path.to.ZenithUI)
+
+-- Create main window
+local Window = ZenithUI:CreateWindow({
+    Title = "Zenith Hub v1.0",
+    SubTitle = "by zenithX",
+    Icon = "rbxassetid://4483345998", -- Optional icon
+    Size = UDim2.new(0, 650, 0, 480),
+    Theme = "Dark", -- "Dark" | "Light" | "Midnight" | "Aqua"
+    Acrylic = true,
+    MinimizeKey = Enum.KeyCode.RightShift,
+    SaveConfig = true,
+    ConfigFolder = "ZenithUI",
+    ConfigName = "example_config.json"
+})
+
+-- Create watermark
+ZenithUI:CreateWatermark()
+
+-- Send welcome notification
+ZenithUI:Notify({
+    Title = "Welcome!",
+    Content = "ZenithUI loaded successfully",
+    Duration = 5,
+    Type = "Success" -- Success | Info | Warning | Error
+})
+
+--[[ 
+    ============================================
+    TAB 1: MAIN / AIMBOT
+    ============================================
+]]
+local MainTab = Window:CreateTab("Main", "rbxassetid://6031075938")
+
+-- Aimbot Section
+local AimbotSection = MainTab:CreateSection("Aimbot Settings")
+
+-- Toggle
+local AimbotToggle = AimbotSection:CreateToggle({
+    Name = "Enable Aimbot",
+    Default = false,
+    Flag = "AimbotEnabled",
+    Callback = function(Value)
+        print("Aimbot:", Value)
+        ZenithUI:Notify({
+            Title = "Aimbot",
+            Content = Value and "Enabled" or "Disabled",
+            Duration = 2,
+            Type = Value and "Success" or "Info"
+        })
+    end
+})
+
+-- Slider
+local FOVSlider = AimbotSection:CreateSlider({
+    Name = "FOV Size",
+    Min = 30,
+    Max = 800,
+    Increment = 10,
+    Default = 150,
+    Suffix = "px",
+    Flag = "AimbotFOV",
+    Callback = function(Value)
+        print("FOV set to:", Value)
+    end
+})
+
+-- Dropdown (Single Select)
+local HitPartDropdown = AimbotSection:CreateDropdown({
+    Name = "Target Part",
+    Options = {"Head", "HumanoidRootPart", "Torso", "Random"},
+    Default = "Head",
+    Flag = "AimbotHitPart",
+    Callback = function(Selected)
+        print("Target part:", Selected)
+    end
+})
+
+-- Toggle with colorpicker
+local SilentAimToggle = AimbotSection:CreateToggle({
+    Name = "Silent Aim",
+    Default = false,
+    Flag = "SilentAim",
+    Callback = function(Value)
+        print("Silent Aim:", Value)
+    end
+})
+
+-- Keybind
+local AimKeybind = AimbotSection:CreateKeybind({
+    Name = "Aim Key",
+    Default = Enum.KeyCode.E,
+    Flag = "AimKey",
+    Callback = function()
+        print("Aim key pressed!")
+    end
+})
+
+-- ESP Section
+local ESPSection = MainTab:CreateSection("ESP Settings")
+
+-- Toggle
+ESPSection:CreateToggle({
+    Name = "Enable ESP",
+    Default = false,
+    Flag = "ESPEnabled",
+    Callback = function(Value)
+        print("ESP:", Value)
+    end
+})
+
+-- Colorpicker
+local ESPColor = ESPSection:CreateColorpicker({
+    Name = "ESP Color",
+    Default = Color3.fromRGB(255, 0, 100),
+    Flag = "ESPColor",
+    Callback = function(Color)
+        print("ESP Color:", Color)
+    end
+})
+
+-- Multi Dropdown
+ESPSection:CreateDropdown({
+    Name = "ESP Elements",
+    Options = {"Box", "Name", "Health", "Distance", "Tracer", "Skeleton"},
+    Default = {"Box", "Name"},
+    Multi = true,
+    Flag = "ESPElements",
+    Callback = function(Selected)
+        print("ESP Elements:", table.concat(Selected, ", "))
+    end
+})
+
+--[[ 
+    ============================================
+    TAB 2: PLAYER
+    ============================================
+]]
+local PlayerTab = Window:CreateTab("Player", "rbxassetid://6031071053")
+
+local MovementSection = PlayerTab:CreateSection("Movement")
+
+-- Speed slider
+MovementSection:CreateSlider({
+    Name = "Walk Speed",
+    Min = 16,
+    Max = 500,
+    Increment = 1,
+    Default = 16,
+    Flag = "WalkSpeed",
+    Callback = function(Value)
+        local humanoid = game.Players.LocalPlayer.Character and 
+                         game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = Value
+        end
+    end
+})
+
+-- Jump power slider
+MovementSection:CreateSlider({
+    Name = "Jump Power",
+    Min = 50,
+    Max = 500,
+    Increment = 5,
+    Default = 50,
+    Flag = "JumpPower",
+    Callback = function(Value)
+        local humanoid = game.Players.LocalPlayer.Character and 
+                         game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.JumpPower = Value
+        end
+    end
+})
+
+-- Flight toggle
+MovementSection:CreateToggle({
+    Name = "Infinite Jump",
+    Default = false,
+    Flag = "InfJump",
+    Callback = function(Value)
+        print("Infinite Jump:", Value)
+    end
+})
+
+-- Quick toggles section (small/compact)
+local QuickSection = PlayerTab:CreateSmallSection("Quick Toggles")
+
+QuickSection:CreateToggle({
+    Name = "No Clip",
+    Default = false,
+    Flag = "NoClip",
+    Callback = function(Value)
+        print("NoClip:", Value)
+    end
+})
+
+QuickSection:CreateToggle({
+    Name = "No Fall Damage",
+    Default = false,
+    Flag = "NoFallDmg",
+    Callback = function(Value)
+        print("No Fall Damage:", Value)
+    end
+})
+
+--[[ 
+    ============================================
+    TAB 3: VISUALS
+    ============================================
+]]
+local VisualsTab = Window:CreateTab("Visuals", "rbxassetid://6031280882")
+
+local WorldSection = VisualsTab:CreateSection("World")
+
+-- Ambient color
+WorldSection:CreateColorpicker({
+    Name = "Ambient Color",
+    Default = Color3.fromRGB(127, 127, 127),
+    Flag = "AmbientColor",
+    Callback = function(Color)
+        game:GetService("Lighting").Ambient = Color
+    end
+})
+
+-- Time slider
+WorldSection:CreateSlider({
+    Name = "Time of Day",
+    Min = 0,
+    Max = 24,
+    Increment = 0.5,
+    Default = 12,
+    Flag = "TimeOfDay",
+    Callback = function(Value)
+        game:GetService("Lighting").ClockTime = Value
+    end
+})
+
+-- Fog toggle
+WorldSection:CreateToggle({
+    Name = "Remove Fog",
+    Default = false,
+    Flag = "RemoveFog",
+    Callback = function(Value)
+        game:GetService("Lighting").FogEnd = Value and 100000 or 1000
+    end
+})
+
+-- Fullbright
+WorldSection:CreateToggle({
+    Name = "Fullbright",
+    Default = false,
+    Flag = "Fullbright",
+    Callback = function(Value)
+        local lighting = game:GetService("Lighting")
+        if Value then
+            lighting.Brightness = 2
+            lighting.GlobalShadows = false
+        else
+            lighting.Brightness = 1
+            lighting.GlobalShadows = true
+        end
+    end
+})
+
+--[[ 
+    ============================================
+    TAB 4: MISCELLANEOUS
+    ============================================
+]]
+local MiscTab = Window:CreateTab("Misc", "rbxassetid://6031229005")
+
+local UtilitySection = MiscTab:CreateSection("Utilities")
+
+-- Text input
+UtilitySection:CreateInput({
+    Name = "Player Name",
+    Placeholder = "Enter username...",
+    Default = "",
+    Flag = "TargetPlayer",
+    Callback = function(Text)
+        print("Target player:", Text)
+    end
+})
+
+-- Button
+UtilitySection:CreateButton({
+    Name = "Rejoin Server",
+    Callback = function()
+        ZenithUI:Notify({
+            Title = "Rejoining",
+            Content = "Reconnecting to server...",
+            Duration = 3,
+            Type = "Info"
+        })
+        task.wait(1)
+        game:GetService("TeleportService"):Teleport(game.PlaceId)
+    end
+})
+
+-- Button
+UtilitySection:CreateButton({
+    Name = "Copy Server Link",
+    Callback = function()
+        local link = "roblox://experiences/start?placeId=" .. game.PlaceId .. "&gameInstanceId=" .. game.JobId
+        setclipboard(link)
+        ZenithUI:Notify({
+            Title = "Copied!",
+            Content = "Server link copied to clipboard",
+            Duration = 3,
+            Type = "Success"
+        })
+    end
+})
+
+-- Separator
+UtilitySection:CreateSeparator()
+
+-- Label
+local StatusLabel = UtilitySection:CreateLabel("Status: Ready")
+
+-- Paragraph
+UtilitySection:CreateParagraph({
+    Title = "⚠️ Warning",
+    Content = "Use scripts responsibly. This is for educational purposes only. Misuse may result in account moderation."
+})
+
+--[[ 
+    ============================================
+    TAB 5: SETTINGS
+    ============================================
+]]
+local SettingsTab = Window:CreateTab("Settings", "rbxassetid://6031225819")
+
+local UISection = SettingsTab:CreateSection("UI Settings")
+
+-- Theme dropdown
+UISection:CreateDropdown({
+    Name = "Theme",
+    Options = ZenithUI:GetThemes(),
+    Default = "Dark",
+    Callback = function(Selected)
+        Window:SetTheme(Selected)
+        ZenithUI:Notify({
+            Title = "Theme Changed",
+            Content = "Applied " .. Selected .. " theme",
+            Duration = 2,
+            Type = "Info"
+        })
+    end
+})
+
+-- Accent color
+UISection:CreateColorpicker({
+    Name = "Accent Color",
+    Default = Color3.fromRGB(0, 170, 255),
+    Callback = function(Color)
+        ZenithUI:SetAccentColor(Color)
+    end
+})
+
+-- Sound toggle
+UISection:CreateToggle({
+    Name = "UI Sounds",
+    Default = true,
+    Callback = function(Value)
+        ZenithUI:ToggleSounds(Value)
+    end
+})
+
+-- Watermark toggle
+UISection:CreateToggle({
+    Name = "Show Watermark",
+    Default = true,
+    Callback = function(Value)
+        ZenithUI

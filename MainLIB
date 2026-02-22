@@ -1,13 +1,3 @@
---[[
-    ╔══════════════════════════════════════════════════════════════╗
-    ║  KyuuLibrary v1.0.0 — Premium Roblox UI Library            ║
-    ║  A WindUI-inspired, feature-rich, production-ready library  ║
-    ║  Author: kyuuX | License: MIT                              ║
-    ║  Single-file loadable. No external dependencies.            ║
-    ╚══════════════════════════════════════════════════════════════╝
---]]
-
--- Services
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -17,17 +7,12 @@ local CoreGui = game:GetService("CoreGui")
 local TextService = game:GetService("TextService")
 local SoundService = game:GetService("SoundService")
 
--- Player
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--- UTILITY MODULE
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 local Utility = {}
 
-function Utility.Create(className: string, properties: {[string]: any}, children: {Instance}?): Instance
+function Utility.Create(className, properties, children)
     local instance = Instance.new(className)
     for prop, value in pairs(properties) do
         if prop ~= "Parent" then
@@ -47,7 +32,7 @@ function Utility.Create(className: string, properties: {[string]: any}, children
     return instance
 end
 
-function Utility.Tween(instance: Instance, properties: {[string]: any}, duration: number?, easingStyle: Enum.EasingStyle?, easingDirection: Enum.EasingDirection?)
+function Utility.Tween(instance, properties, duration, easingStyle, easingDirection)
     local tweenInfo = TweenInfo.new(
         duration or 0.25,
         easingStyle or Enum.EasingStyle.Sine,
@@ -58,7 +43,7 @@ function Utility.Tween(instance: Instance, properties: {[string]: any}, duration
     return tween
 end
 
-function Utility.Ripple(button: GuiObject, color: Color3?)
+function Utility.Ripple(button, color)
     local rippleColor = color or Color3.fromRGB(255, 255, 255)
     local mousePos = UserInputService:GetMouseLocation()
     local absPos = button.AbsolutePosition
@@ -87,11 +72,11 @@ function Utility.Ripple(button: GuiObject, color: Color3?)
     end)
 end
 
-function Utility.MakeDraggable(topBar: GuiObject, mainFrame: GuiObject)
+function Utility.MakeDraggable(topBar, mainFrame)
     local dragging = false
-    local dragInput: InputObject? = nil
-    local dragStart: Vector3? = nil
-    local startPos: UDim2? = nil
+    local dragInput = nil
+    local dragStart = nil
+    local startPos = nil
     local connections = {}
 
     table.insert(connections, topBar.InputBegan:Connect(function(input)
@@ -134,7 +119,7 @@ function Utility.MakeDraggable(topBar: GuiObject, mainFrame: GuiObject)
     return connections
 end
 
-function Utility.AddSound(soundId: string, volume: number?)
+function Utility.AddSound(soundId, volume)
     pcall(function()
         local sound = Instance.new("Sound")
         sound.SoundId = soundId
@@ -147,7 +132,7 @@ function Utility.AddSound(soundId: string, volume: number?)
     end)
 end
 
-function Utility.DeepCopy(original: any): any
+function Utility.DeepCopy(original)
     if type(original) ~= "table" then return original end
     local copy = {}
     for key, value in pairs(original) do
@@ -155,20 +140,6 @@ function Utility.DeepCopy(original: any): any
     end
     return copy
 end
-
-function Utility.ClipFrame(parent: GuiObject): Frame
-    return Utility.Create("Frame", {
-        Parent = parent,
-        BackgroundTransparency = 1,
-        Size = UDim2.new(1, 0, 1, 0),
-        ClipsDescendants = true,
-        Name = "ClipFrame"
-    }) :: Frame
-end
-
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--- THEME ENGINE
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 local Themes = {
     Dark = {
@@ -193,6 +164,14 @@ local Themes = {
         SliderBackground = Color3.fromRGB(40, 40, 60),
         InputBackground = Color3.fromRGB(28, 28, 42),
         HoverOverlay = Color3.fromRGB(255, 255, 255),
+        GlowEnabled = false,
+        GlassEnabled = false,
+        ElementTransparency = 0.5,
+        ElementStrokeColor = Color3.fromRGB(45, 45, 65),
+        ElementStrokeTransparency = 0.6,
+        ButtonHover = Color3.fromRGB(50, 50, 70),
+        RibbonEnabled = false,
+        RibbonColor = Color3.fromRGB(0, 0, 0),
     },
     Light = {
         Background = Color3.fromRGB(240, 240, 248),
@@ -216,12 +195,109 @@ local Themes = {
         SliderBackground = Color3.fromRGB(200, 200, 215),
         InputBackground = Color3.fromRGB(245, 245, 252),
         HoverOverlay = Color3.fromRGB(0, 0, 0),
-    }
+        GlowEnabled = false,
+        GlassEnabled = false,
+        ElementTransparency = 0.5,
+        ElementStrokeColor = Color3.fromRGB(200, 200, 215),
+        ElementStrokeTransparency = 0.6,
+        ButtonHover = Color3.fromRGB(210, 210, 225),
+        RibbonEnabled = false,
+        RibbonColor = Color3.fromRGB(0, 0, 0),
+    },
+    Glossy = {
+        Background = Color3.fromRGB(12, 12, 20),
+        SecondaryBackground = Color3.fromRGB(20, 20, 35),
+        TertiaryBackground = Color3.fromRGB(30, 30, 50),
+        Sidebar = Color3.fromRGB(8, 8, 16),
+        Accent = Color3.fromRGB(120, 80, 255),
+        AccentDark = Color3.fromRGB(90, 50, 200),
+        Text = Color3.fromRGB(245, 245, 255),
+        TextDark = Color3.fromRGB(180, 170, 210),
+        TextDimmed = Color3.fromRGB(120, 110, 150),
+        Border = Color3.fromRGB(80, 60, 140),
+        Shadow = Color3.fromRGB(0, 0, 0),
+        Success = Color3.fromRGB(100, 230, 140),
+        Warning = Color3.fromRGB(255, 200, 60),
+        Error = Color3.fromRGB(255, 90, 90),
+        Info = Color3.fromRGB(120, 80, 255),
+        ToggleOn = Color3.fromRGB(120, 80, 255),
+        ToggleOff = Color3.fromRGB(50, 40, 80),
+        SliderFill = Color3.fromRGB(120, 80, 255),
+        SliderBackground = Color3.fromRGB(35, 30, 60),
+        InputBackground = Color3.fromRGB(18, 16, 32),
+        HoverOverlay = Color3.fromRGB(255, 255, 255),
+        GlowEnabled = true,
+        GlassEnabled = false,
+        ElementTransparency = 0.4,
+        ElementStrokeColor = Color3.fromRGB(120, 80, 255),
+        ElementStrokeTransparency = 0.4,
+        ButtonHover = Color3.fromRGB(60, 40, 100),
+        RibbonEnabled = false,
+        RibbonColor = Color3.fromRGB(0, 0, 0),
+    },
+    Glass = {
+        Background = Color3.fromRGB(15, 15, 25),
+        SecondaryBackground = Color3.fromRGB(25, 25, 40),
+        TertiaryBackground = Color3.fromRGB(35, 35, 55),
+        Sidebar = Color3.fromRGB(10, 10, 18),
+        Accent = Color3.fromRGB(0, 200, 220),
+        AccentDark = Color3.fromRGB(0, 160, 180),
+        Text = Color3.fromRGB(230, 240, 255),
+        TextDark = Color3.fromRGB(150, 170, 200),
+        TextDimmed = Color3.fromRGB(90, 110, 140),
+        Border = Color3.fromRGB(255, 255, 255),
+        Shadow = Color3.fromRGB(0, 0, 0),
+        Success = Color3.fromRGB(80, 220, 130),
+        Warning = Color3.fromRGB(255, 190, 50),
+        Error = Color3.fromRGB(255, 85, 85),
+        Info = Color3.fromRGB(0, 200, 220),
+        ToggleOn = Color3.fromRGB(0, 200, 220),
+        ToggleOff = Color3.fromRGB(50, 60, 80),
+        SliderFill = Color3.fromRGB(0, 200, 220),
+        SliderBackground = Color3.fromRGB(40, 50, 70),
+        InputBackground = Color3.fromRGB(20, 25, 40),
+        HoverOverlay = Color3.fromRGB(255, 255, 255),
+        GlowEnabled = true,
+        GlassEnabled = true,
+        ElementTransparency = 0.7,
+        ElementStrokeColor = Color3.fromRGB(255, 255, 255),
+        ElementStrokeTransparency = 0.3,
+        ButtonHover = Color3.fromRGB(50, 60, 90),
+        RibbonEnabled = false,
+        RibbonColor = Color3.fromRGB(0, 0, 0),
+    },
+    Christmas = {
+        Background = Color3.fromRGB(10, 28, 12),
+        SecondaryBackground = Color3.fromRGB(15, 40, 18),
+        TertiaryBackground = Color3.fromRGB(22, 55, 26),
+        Sidebar = Color3.fromRGB(8, 22, 10),
+        Accent = Color3.fromRGB(200, 30, 30),
+        AccentDark = Color3.fromRGB(160, 20, 20),
+        Text = Color3.fromRGB(240, 245, 240),
+        TextDark = Color3.fromRGB(160, 200, 165),
+        TextDimmed = Color3.fromRGB(100, 140, 105),
+        Border = Color3.fromRGB(40, 80, 45),
+        Shadow = Color3.fromRGB(0, 0, 0),
+        Success = Color3.fromRGB(80, 200, 100),
+        Warning = Color3.fromRGB(255, 200, 50),
+        Error = Color3.fromRGB(220, 50, 50),
+        Info = Color3.fromRGB(200, 30, 30),
+        ToggleOn = Color3.fromRGB(200, 30, 30),
+        ToggleOff = Color3.fromRGB(30, 60, 35),
+        SliderFill = Color3.fromRGB(200, 30, 30),
+        SliderBackground = Color3.fromRGB(25, 50, 28),
+        InputBackground = Color3.fromRGB(12, 32, 15),
+        HoverOverlay = Color3.fromRGB(255, 255, 255),
+        GlowEnabled = false,
+        GlassEnabled = false,
+        ElementTransparency = 0.5,
+        ElementStrokeColor = Color3.fromRGB(40, 80, 45),
+        ElementStrokeTransparency = 0.5,
+        ButtonHover = Color3.fromRGB(180, 25, 25),
+        RibbonEnabled = true,
+        RibbonColor = Color3.fromRGB(200, 30, 30),
+    },
 }
-
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--- MAIN LIBRARY
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 local KyuuLibrary = {}
 KyuuLibrary.__index = KyuuLibrary
@@ -231,15 +307,16 @@ KyuuLibrary.SoundsEnabled = true
 KyuuLibrary.AccentColor = Color3.fromRGB(0, 170, 255)
 KyuuLibrary.ScreenGui = nil
 KyuuLibrary.NotificationContainer = nil
+KyuuLibrary.CustomKeybinds = {}
+KyuuLibrary.GlobalToggleKey = Enum.KeyCode.Z
 
--- File system compatibility
-local function writefileCompat(path: string, data: string)
+local function writefileCompat(path, data)
     if writefile then
         writefile(path, data)
     end
 end
 
-local function readfileCompat(path: string): string?
+local function readfileCompat(path)
     if readfile then
         local success, result = pcall(readfile, path)
         if success then return result end
@@ -247,31 +324,25 @@ local function readfileCompat(path: string): string?
     return nil
 end
 
-local function isfileCompat(path: string): boolean
+local function isfileCompat(path)
     if isfile then
         return isfile(path)
     end
     return false
 end
 
-local function makeFolderCompat(path: string)
+local function makeFolderCompat(path)
     if makefolder then
         pcall(makefolder, path)
     end
 end
 
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--- INITIALIZATION
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 function KyuuLibrary:Init()
     if self.ScreenGui then return end
 
-    -- Determine parent
     local guiParent = CoreGui
     pcall(function()
         if syn and syn.protect_gui then
-            -- Synapse X
         elseif gethui then
             guiParent = gethui()
         end
@@ -292,7 +363,6 @@ function KyuuLibrary:Init()
         end
     end)
 
-    -- Notification container
     self.NotificationContainer = Utility.Create("Frame", {
         Parent = self.ScreenGui,
         Name = "NotificationContainer",
@@ -311,14 +381,50 @@ function KyuuLibrary:Init()
         })
     })
 
+    local globalKeybindConn = UserInputService.InputBegan:Connect(function(input, processed)
+        if processed then return end
+        if input.UserInputType == Enum.UserInputType.Keyboard then
+            if input.KeyCode == self.GlobalToggleKey then
+                for _, window in ipairs(self.Windows) do
+                    window:Toggle()
+                end
+            end
+            for _, kb in ipairs(self.CustomKeybinds) do
+                if input.KeyCode == kb.Key then
+                    pcall(kb.Callback)
+                end
+            end
+        end
+    end)
+    table.insert(self.Connections, globalKeybindConn)
+
     return self
 end
 
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--- NOTIFICATIONS
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function KyuuLibrary:BindKey(name, key, callback)
+    for i, kb in ipairs(self.CustomKeybinds) do
+        if kb.Name == name then
+            self.CustomKeybinds[i] = { Name = name, Key = key, Callback = callback }
+            return
+        end
+    end
+    table.insert(self.CustomKeybinds, { Name = name, Key = key, Callback = callback })
+end
 
-function KyuuLibrary:Notify(config: {Title: string?, Content: string?, Duration: number?, Type: string?})
+function KyuuLibrary:UnbindKey(name)
+    for i, kb in ipairs(self.CustomKeybinds) do
+        if kb.Name == name then
+            table.remove(self.CustomKeybinds, i)
+            return
+        end
+    end
+end
+
+function KyuuLibrary:SetToggleKey(key)
+    self.GlobalToggleKey = key
+end
+
+function KyuuLibrary:Notify(config)
     self:Init()
     local title = config.Title or "Notification"
     local content = config.Content or ""
@@ -366,7 +472,6 @@ function KyuuLibrary:Notify(config: {Title: string?, Content: string?, Duration:
         }),
     })
 
-    -- Accent bar on left
     Utility.Create("Frame", {
         Parent = notifFrame,
         Name = "AccentBar",
@@ -377,7 +482,6 @@ function KyuuLibrary:Notify(config: {Title: string?, Content: string?, Duration:
         Utility.Create("UICorner", { CornerRadius = UDim.new(0, 2) })
     })
 
-    -- Icon
     Utility.Create("TextLabel", {
         Parent = notifFrame,
         Name = "Icon",
@@ -391,7 +495,6 @@ function KyuuLibrary:Notify(config: {Title: string?, Content: string?, Duration:
         ZIndex = 10002,
     })
 
-    -- Title
     Utility.Create("TextLabel", {
         Parent = notifFrame,
         Name = "Title",
@@ -407,7 +510,6 @@ function KyuuLibrary:Notify(config: {Title: string?, Content: string?, Duration:
         ZIndex = 10002,
     })
 
-    -- Content
     if content ~= "" then
         Utility.Create("TextLabel", {
             Parent = notifFrame,
@@ -426,7 +528,6 @@ function KyuuLibrary:Notify(config: {Title: string?, Content: string?, Duration:
         })
     end
 
-    -- Progress bar
     local progressBarBg = Utility.Create("Frame", {
         Parent = notifFrame,
         Name = "ProgressBg",
@@ -446,19 +547,15 @@ function KyuuLibrary:Notify(config: {Title: string?, Content: string?, Duration:
         Utility.Create("UICorner", { CornerRadius = UDim.new(0, 2) })
     })
 
-    -- Animate in
     notifFrame.Position = UDim2.new(1, 50, 0, 0)
     Utility.Tween(notifFrame, { Position = UDim2.new(0, 0, 0, 0) }, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 
-    -- Sound
     if self.SoundsEnabled then
         Utility.AddSound("rbxassetid://6026984224", 0.3)
     end
 
-    -- Progress countdown
     Utility.Tween(progressBar, { Size = UDim2.new(0, 0, 1, 0) }, duration, Enum.EasingStyle.Linear)
 
-    -- Dismiss
     task.delay(duration, function()
         if notifFrame and notifFrame.Parent then
             local dismissTween = Utility.Tween(notifFrame, {
@@ -474,11 +571,7 @@ function KyuuLibrary:Notify(config: {Title: string?, Content: string?, Duration:
     end)
 end
 
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--- ACCENT COLOR
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function KyuuLibrary:SetAccentColor(color: Color3)
+function KyuuLibrary:SetAccentColor(color)
     self.AccentColor = color
     for _, window in ipairs(self.Windows) do
         if window._updateAccent then
@@ -487,13 +580,9 @@ function KyuuLibrary:SetAccentColor(color: Color3)
     end
 end
 
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--- CONTEXT MENU
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 local ActiveContextMenu = nil
 
-local function CreateContextMenu(parent: Instance, items: {{Name: string, Callback: () -> ()}}, theme: any)
+local function CreateContextMenu(parent, items, theme)
     if ActiveContextMenu then
         ActiveContextMenu:Destroy()
         ActiveContextMenu = nil
@@ -561,13 +650,11 @@ local function CreateContextMenu(parent: Instance, items: {{Name: string, Callba
         end)
     end
 
-    -- Animate in
     menu.BackgroundTransparency = 1
     Utility.Tween(menu, { BackgroundTransparency = 0.02 }, 0.2)
 
     ActiveContextMenu = menu
 
-    -- Close on click outside
     local closeConn
     closeConn = UserInputService.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -590,22 +677,135 @@ local function CreateContextMenu(parent: Instance, items: {{Name: string, Callba
     return menu
 end
 
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--- CREATE WINDOW
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+local function ApplyGlow(frame, glowColor, intensity)
+    local glow = Utility.Create("ImageLabel", {
+        Parent = frame,
+        Name = "GlowEffect",
+        BackgroundTransparency = 1,
+        Position = UDim2.new(0.5, 0, 0.5, 0),
+        Size = UDim2.new(1, 60, 1, 60),
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        Image = "rbxassetid://6014261993",
+        ImageColor3 = glowColor or Color3.fromRGB(120, 80, 255),
+        ImageTransparency = intensity or 0.6,
+        ScaleType = Enum.ScaleType.Slice,
+        SliceCenter = Rect.new(49, 49, 450, 450),
+        ZIndex = frame.ZIndex - 1,
+    })
+    return glow
+end
 
-function KyuuLibrary:CreateWindow(config: {
-    Title: string?,
-    SubTitle: string?,
-    Icon: string?,
-    Size: UDim2?,
-    Theme: string?,
-    Acrylic: boolean?,
-    MinimizeKey: Enum.KeyCode?,
-    SaveConfig: boolean?,
-    ConfigFolder: string?,
-    ConfigName: string?,
-})
+local function ApplyGlassEffect(frame, theme)
+    frame.BackgroundTransparency = 0.6
+    local glassOverlay = Utility.Create("Frame", {
+        Parent = frame,
+        Name = "GlassOverlay",
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 0.92,
+        Size = UDim2.new(1, 0, 1, 0),
+        ZIndex = frame.ZIndex + 1,
+    }, {
+        Utility.Create("UICorner", { CornerRadius = UDim.new(0, 12) }),
+        Utility.Create("UIGradient", {
+            Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+                ColorSequenceKeypoint.new(0.3, Color3.fromRGB(200, 220, 255)),
+                ColorSequenceKeypoint.new(0.7, Color3.fromRGB(180, 200, 240)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255)),
+            }),
+            Transparency = NumberSequence.new({
+                NumberSequenceKeypoint.new(0, 0.85),
+                NumberSequenceKeypoint.new(0.5, 0.95),
+                NumberSequenceKeypoint.new(1, 0.88),
+            }),
+            Rotation = 25,
+        })
+    })
+    return glassOverlay
+end
+
+local function CreateRibbon(parent, color)
+    local ribbonWidth = 120
+    local ribbonHeight = 35
+
+    local ribbonContainer = Utility.Create("Frame", {
+        Parent = parent,
+        Name = "RibbonContainer",
+        BackgroundTransparency = 1,
+        Size = UDim2.new(0, ribbonWidth, 0, ribbonHeight + 12),
+        Position = UDim2.new(0.5, 0, 0, -6),
+        AnchorPoint = Vector2.new(0.5, 0),
+        ZIndex = 20,
+        ClipsDescendants = false,
+    })
+
+    local ribbonMain = Utility.Create("Frame", {
+        Parent = ribbonContainer,
+        Name = "RibbonMain",
+        BackgroundColor3 = color,
+        Size = UDim2.new(1, 0, 0, ribbonHeight),
+        Position = UDim2.new(0, 0, 0, 0),
+        ZIndex = 21,
+    }, {
+        Utility.Create("UICorner", { CornerRadius = UDim.new(0, 4) }),
+        Utility.Create("UIGradient", {
+            Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+                ColorSequenceKeypoint.new(0.5, color),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255)),
+            }),
+            Transparency = NumberSequence.new({
+                NumberSequenceKeypoint.new(0, 0.3),
+                NumberSequenceKeypoint.new(0.5, 0),
+                NumberSequenceKeypoint.new(1, 0.3),
+            }),
+        })
+    })
+
+    Utility.Create("TextLabel", {
+        Parent = ribbonMain,
+        Name = "RibbonText",
+        BackgroundTransparency = 1,
+        Size = UDim2.new(1, 0, 1, 0),
+        Text = "🎄",
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 18,
+        Font = Enum.Font.GothamBold,
+        ZIndex = 22,
+    })
+
+    local leftTail = Utility.Create("Frame", {
+        Parent = ribbonContainer,
+        Name = "LeftTail",
+        BackgroundColor3 = Color3.fromRGB(
+            math.max(0, color.R * 255 - 40) / 255,
+            math.max(0, color.G * 255 - 40) / 255,
+            math.max(0, color.B * 255 - 40) / 255
+        ),
+        Size = UDim2.new(0, 14, 0, 12),
+        Position = UDim2.new(0, -4, 1, -4),
+        Rotation = 0,
+        ZIndex = 19,
+    })
+
+    local rightTail = Utility.Create("Frame", {
+        Parent = ribbonContainer,
+        Name = "RightTail",
+        BackgroundColor3 = Color3.fromRGB(
+            math.max(0, color.R * 255 - 40) / 255,
+            math.max(0, color.G * 255 - 40) / 255,
+            math.max(0, color.B * 255 - 40) / 255
+        ),
+        Size = UDim2.new(0, 14, 0, 12),
+        Position = UDim2.new(1, -10, 1, -4),
+        Rotation = 0,
+        ZIndex = 19,
+    })
+
+    return ribbonContainer
+end
+
+function KyuuLibrary:CreateWindow(config)
     self:Init()
 
     local windowTitle = config.Title or "KyuuLibrary Window"
@@ -619,7 +819,6 @@ function KyuuLibrary:CreateWindow(config: {
     local configFolder = config.ConfigFolder or "KyuuLibrary"
     local configName = config.ConfigName or "config.json"
 
-    -- Window object
     local Window = {}
     Window._connections = {}
     Window._tabs = {}
@@ -634,15 +833,14 @@ function KyuuLibrary:CreateWindow(config: {
     Window._configValues = {}
     Window._accentElements = {}
     Window._destroyed = false
+    Window._customFeatures = {}
 
     local theme = Window._theme
 
-    -- Create config folder
     if saveConfig then
         makeFolderCompat(configFolder)
     end
 
-    -- ━━━━━━━━━━━━━━ MAIN FRAME ━━━━━━━━━━━━━━
     local mainFrame = Utility.Create("Frame", {
         Parent = self.ScreenGui,
         Name = "KyuuWindow",
@@ -651,20 +849,19 @@ function KyuuLibrary:CreateWindow(config: {
         Size = windowSize,
         AnchorPoint = Vector2.new(0.5, 0.5),
         ClipsDescendants = true,
+        BackgroundTransparency = theme.GlassEnabled and 0.4 or 0,
     }, {
         Utility.Create("UICorner", { CornerRadius = UDim.new(0, 12) }),
     })
     Window._mainFrame = mainFrame
 
-    -- Shadow / Outer stroke
     Utility.Create("UIStroke", {
         Parent = mainFrame,
-        Color = theme.Border,
-        Thickness = 1,
-        Transparency = 0.3,
+        Color = theme.GlassEnabled and Color3.fromRGB(255, 255, 255) or theme.Border,
+        Thickness = theme.GlassEnabled and 1.5 or 1,
+        Transparency = theme.GlassEnabled and 0.3 or 0.3,
     })
 
-    -- Drop shadow frame
     local shadowFrame = Utility.Create("ImageLabel", {
         Parent = mainFrame,
         Name = "Shadow",
@@ -680,9 +877,16 @@ function KyuuLibrary:CreateWindow(config: {
         ZIndex = -1,
     })
 
-    -- Acrylic effect (gradient overlay simulating glass)
-    if acrylicEnabled then
-        local acrylicOverlay = Utility.Create("Frame", {
+    if theme.GlowEnabled then
+        ApplyGlow(mainFrame, theme.Accent, 0.65)
+    end
+
+    if theme.GlassEnabled then
+        ApplyGlassEffect(mainFrame, theme)
+    end
+
+    if acrylicEnabled and not theme.GlassEnabled then
+        Utility.Create("Frame", {
             Parent = mainFrame,
             Name = "AcrylicOverlay",
             BackgroundColor3 = theme.Background,
@@ -707,32 +911,29 @@ function KyuuLibrary:CreateWindow(config: {
         })
     end
 
-    -- ━━━━━━━━━━━━━━ TITLE BAR ━━━━━━━━━━━━━━
     local titleBarHeight = 48
     local titleBar = Utility.Create("Frame", {
         Parent = mainFrame,
         Name = "TitleBar",
         BackgroundColor3 = theme.SecondaryBackground,
-        BackgroundTransparency = 0.2,
+        BackgroundTransparency = theme.GlassEnabled and 0.5 or 0.2,
         Size = UDim2.new(1, 0, 0, titleBarHeight),
         ZIndex = 5,
     }, {
         Utility.Create("UICorner", { CornerRadius = UDim.new(0, 12) }),
     })
 
-    -- Remove bottom rounding
     Utility.Create("Frame", {
         Parent = titleBar,
         Name = "BottomFill",
         BackgroundColor3 = theme.SecondaryBackground,
-        BackgroundTransparency = 0.2,
+        BackgroundTransparency = theme.GlassEnabled and 0.5 or 0.2,
         Size = UDim2.new(1, 0, 0, 14),
         Position = UDim2.new(0, 0, 1, -14),
         ZIndex = 5,
         BorderSizePixel = 0,
     })
 
-    -- Separator under title
     Utility.Create("Frame", {
         Parent = titleBar,
         Name = "Separator",
@@ -744,7 +945,10 @@ function KyuuLibrary:CreateWindow(config: {
         BorderSizePixel = 0,
     })
 
-    -- Icon in title bar
+    if theme.RibbonEnabled then
+        CreateRibbon(titleBar, theme.RibbonColor)
+    end
+
     local titleOffset = 14
     if windowIcon ~= "" then
         Utility.Create("ImageLabel", {
@@ -760,7 +964,6 @@ function KyuuLibrary:CreateWindow(config: {
         titleOffset = 44
     end
 
-    -- Title text
     local titleLabel = Utility.Create("TextLabel", {
         Parent = titleBar,
         Name = "TitleLabel",
@@ -775,7 +978,6 @@ function KyuuLibrary:CreateWindow(config: {
         ZIndex = 6,
     })
 
-    -- Subtitle
     if subTitle ~= "" then
         titleLabel.Size = UDim2.new(0.6, 0, 0, 22)
         titleLabel.Position = UDim2.new(0, titleOffset, 0, 6)
@@ -796,7 +998,6 @@ function KyuuLibrary:CreateWindow(config: {
         })
     end
 
-    -- Window control buttons (minimize, close)
     local closeBtn = Utility.Create("TextButton", {
         Parent = titleBar,
         Name = "CloseBtn",
@@ -831,7 +1032,6 @@ function KyuuLibrary:CreateWindow(config: {
         Utility.Create("UICorner", { CornerRadius = UDim.new(0, 8) })
     })
 
-    -- Button hover effects
     for _, btn in ipairs({closeBtn, minimizeBtn}) do
         btn.MouseEnter:Connect(function()
             Utility.Tween(btn, { BackgroundTransparency = 0.3 }, 0.15)
@@ -841,25 +1041,23 @@ function KyuuLibrary:CreateWindow(config: {
         end)
     end
 
-    -- Draggable
     local dragConnections = Utility.MakeDraggable(titleBar, mainFrame)
     for _, c in ipairs(dragConnections) do
         table.insert(Window._connections, c)
     end
 
-    -- ━━━━━━━━━━━━━━ SIDEBAR ━━━━━━━━━━━━━━
     local sidebarWidth = 170
     local sidebar = Utility.Create("Frame", {
         Parent = mainFrame,
         Name = "Sidebar",
         BackgroundColor3 = theme.Sidebar,
+        BackgroundTransparency = theme.GlassEnabled and 0.4 or 0,
         Size = UDim2.new(0, sidebarWidth, 1, -titleBarHeight),
         Position = UDim2.new(0, 0, 0, titleBarHeight),
         ZIndex = 3,
         BorderSizePixel = 0,
     })
 
-    -- Sidebar right border
     Utility.Create("Frame", {
         Parent = sidebar,
         Name = "Border",
@@ -871,7 +1069,6 @@ function KyuuLibrary:CreateWindow(config: {
         BorderSizePixel = 0,
     })
 
-    -- Search bar
     local searchContainer = Utility.Create("Frame", {
         Parent = sidebar,
         Name = "SearchContainer",
@@ -881,10 +1078,10 @@ function KyuuLibrary:CreateWindow(config: {
         ZIndex = 4,
     }, {
         Utility.Create("UICorner", { CornerRadius = UDim.new(0, 8) }),
-        Utility.Create("UIStroke", { Color = theme.Border, Thickness = 1, Transparency = 0.6 }),
+        Utility.Create("UIStroke", { Color = theme.ElementStrokeColor, Thickness = 1, Transparency = theme.ElementStrokeTransparency }),
     })
 
-    local searchIcon = Utility.Create("TextLabel", {
+    Utility.Create("TextLabel", {
         Parent = searchContainer,
         Name = "SearchIcon",
         BackgroundTransparency = 1,
@@ -913,7 +1110,6 @@ function KyuuLibrary:CreateWindow(config: {
         ZIndex = 5,
     })
 
-    -- Tab buttons container (scrollable)
     local tabListScroll = Utility.Create("ScrollingFrame", {
         Parent = sidebar,
         Name = "TabList",
@@ -938,7 +1134,6 @@ function KyuuLibrary:CreateWindow(config: {
         })
     })
 
-    -- Search functionality
     searchBox:GetPropertyChangedSignal("Text"):Connect(function()
         local query = string.lower(searchBox.Text)
         for _, tabData in ipairs(Window._tabs) do
@@ -950,7 +1145,6 @@ function KyuuLibrary:CreateWindow(config: {
         end
     end)
 
-    -- ━━━━━━━━━━━━━━ CONTENT AREA ━━━━━━━━━━━━━━
     local contentArea = Utility.Create("Frame", {
         Parent = mainFrame,
         Name = "ContentArea",
@@ -961,7 +1155,6 @@ function KyuuLibrary:CreateWindow(config: {
         ClipsDescendants = true,
     })
 
-    -- ━━━━━━━━━━━━━━ RESIZE HANDLE ━━━━━━━━━━━━━━
     local resizeHandle = Utility.Create("TextButton", {
         Parent = mainFrame,
         Name = "ResizeHandle",
@@ -1004,7 +1197,6 @@ function KyuuLibrary:CreateWindow(config: {
         end))
     end
 
-    -- ━━━━━━━━━━━━━━ WATERMARK ━━━━━━━━━━━━━━
     local watermark = Utility.Create("Frame", {
         Parent = self.ScreenGui,
         Name = "Watermark",
@@ -1033,15 +1225,13 @@ function KyuuLibrary:CreateWindow(config: {
         ZIndex = 9001,
     })
 
-    -- FPS counter for watermark
     local fps = 60
     local fpsUpdateConn = RunService.Heartbeat:Connect(function(dt)
         fps = math.floor(1 / dt)
     end)
     table.insert(Window._connections, fpsUpdateConn)
 
-    local watermarkUpdateConn
-    watermarkUpdateConn = task.spawn(function()
+    task.spawn(function()
         while not Window._destroyed do
             local playerName = LocalPlayer and LocalPlayer.Name or "Unknown"
             watermarkLabel.Text = string.format("KyuuLibrary | %s | %d FPS | %s",
@@ -1050,41 +1240,36 @@ function KyuuLibrary:CreateWindow(config: {
         end
     end)
 
-    -- ━━━━━━━━━━━━━━ OPEN ANIMATION ━━━━━━━━━━━━━━
     mainFrame.Size = UDim2.new(0, 0, 0, 0)
     mainFrame.BackgroundTransparency = 1
     Utility.Tween(mainFrame, {
         Size = windowSize,
-        BackgroundTransparency = 0,
+        BackgroundTransparency = theme.GlassEnabled and 0.4 or 0,
     }, 0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 
-    -- ━━━━━━━━━━━━━━ KEYBIND TOGGLE ━━━━━━━━━━━━━━
     table.insert(Window._connections, UserInputService.InputBegan:Connect(function(input, processed)
         if processed then return end
         if input.KeyCode == minimizeKey then
-            Window:Toggle()
+            Window:Minimize()
         end
     end))
 
-    -- Close button
     closeBtn.MouseButton1Click:Connect(function()
         Window:Destroy()
     end)
 
-    -- Minimize button
     minimizeBtn.MouseButton1Click:Connect(function()
         Window:Minimize()
     end)
-
-    -- ━━━━━━━━━━━━━━ WINDOW METHODS ━━━━━━━━━━━━━━
 
     function Window:Toggle()
         self._visible = not self._visible
         if self._visible then
             mainFrame.Visible = true
+            watermark.Visible = true
             Utility.Tween(mainFrame, {
                 Size = windowSize,
-                BackgroundTransparency = 0,
+                BackgroundTransparency = theme.GlassEnabled and 0.4 or 0,
             }, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
         else
             local tween = Utility.Tween(mainFrame, {
@@ -1094,6 +1279,7 @@ function KyuuLibrary:CreateWindow(config: {
             tween.Completed:Connect(function()
                 if not self._visible then
                     mainFrame.Visible = false
+                    watermark.Visible = false
                 end
             end)
         end
@@ -1118,7 +1304,6 @@ function KyuuLibrary:CreateWindow(config: {
 
     function Window:Destroy()
         self._destroyed = true
-        -- Disconnect all connections
         for _, conn in ipairs(self._connections) do
             if typeof(conn) == "RBXScriptConnection" then
                 conn:Disconnect()
@@ -1126,12 +1311,10 @@ function KyuuLibrary:CreateWindow(config: {
         end
         self._connections = {}
 
-        -- Save config if enabled
         if self._saveConfig then
             self:SaveConfig()
         end
 
-        -- Animate out
         local tween = Utility.Tween(mainFrame, {
             Size = UDim2.new(0, 0, 0, 0),
             BackgroundTransparency = 1,
@@ -1141,7 +1324,6 @@ function KyuuLibrary:CreateWindow(config: {
             if watermark then watermark:Destroy() end
         end)
 
-        -- Remove from windows list
         for i, w in ipairs(KyuuLibrary.Windows) do
             if w == self then
                 table.remove(KyuuLibrary.Windows, i)
@@ -1150,16 +1332,18 @@ function KyuuLibrary:CreateWindow(config: {
         end
     end
 
-    function Window:SetTheme(newThemeName: string)
+    function Window:SetTheme(newThemeName)
         local newTheme = Themes[newThemeName]
         if not newTheme then return end
         self._theme = newTheme
         self._themeName = newThemeName
 
-        -- Update main elements
         mainFrame.BackgroundColor3 = newTheme.Background
+        mainFrame.BackgroundTransparency = newTheme.GlassEnabled and 0.4 or 0
         titleBar.BackgroundColor3 = newTheme.SecondaryBackground
+        titleBar.BackgroundTransparency = newTheme.GlassEnabled and 0.5 or 0.2
         sidebar.BackgroundColor3 = newTheme.Sidebar
+        sidebar.BackgroundTransparency = newTheme.GlassEnabled and 0.4 or 0
         titleLabel.TextColor3 = newTheme.Text
         searchBox.TextColor3 = newTheme.Text
         searchBox.PlaceholderColor3 = newTheme.TextDimmed
@@ -1167,12 +1351,37 @@ function KyuuLibrary:CreateWindow(config: {
         watermark.BackgroundColor3 = newTheme.SecondaryBackground
         watermarkLabel.TextColor3 = newTheme.Text
 
-        -- Update bottom fill
         local bottomFill = titleBar:FindFirstChild("BottomFill")
-        if bottomFill then bottomFill.BackgroundColor3 = newTheme.SecondaryBackground end
+        if bottomFill then
+            bottomFill.BackgroundColor3 = newTheme.SecondaryBackground
+            bottomFill.BackgroundTransparency = newTheme.GlassEnabled and 0.5 or 0.2
+        end
+
+        local mainStroke = mainFrame:FindFirstChildOfClass("UIStroke")
+        if mainStroke then
+            mainStroke.Color = newTheme.GlassEnabled and Color3.fromRGB(255, 255, 255) or newTheme.Border
+            mainStroke.Thickness = newTheme.GlassEnabled and 1.5 or 1
+        end
+
+        local oldGlow = mainFrame:FindFirstChild("GlowEffect")
+        if oldGlow then oldGlow:Destroy() end
+        local oldGlass = mainFrame:FindFirstChild("GlassOverlay")
+        if oldGlass then oldGlass:Destroy() end
+        local oldRibbon = titleBar:FindFirstChild("RibbonContainer")
+        if oldRibbon then oldRibbon:Destroy() end
+
+        if newTheme.GlowEnabled then
+            ApplyGlow(mainFrame, newTheme.Accent, 0.65)
+        end
+        if newTheme.GlassEnabled then
+            ApplyGlassEffect(mainFrame, newTheme)
+        end
+        if newTheme.RibbonEnabled then
+            CreateRibbon(titleBar, newTheme.RibbonColor)
+        end
     end
 
-    function Window:_updateAccent(color: Color3)
+    function Window:_updateAccent(color)
         for _, element in ipairs(self._accentElements) do
             if element and element.Parent then
                 pcall(function()
@@ -1182,7 +1391,38 @@ function KyuuLibrary:CreateWindow(config: {
         end
     end
 
-    -- ━━━━━━━━━━━━━━ CONFIG SYSTEM ━━━━━━━━━━━━━━
+    function Window:AddCustomFeature(featureConfig)
+        local featureName = featureConfig.Name or "Custom Feature"
+        local featureKey = featureConfig.Key or nil
+        local featureCallback = featureConfig.Callback or function() end
+        local featureToggle = featureConfig.Toggle or false
+        local featureState = featureConfig.Default or false
+
+        local feature = {
+            Name = featureName,
+            Key = featureKey,
+            Callback = featureCallback,
+            IsToggle = featureToggle,
+            State = featureState,
+        }
+
+        if featureKey then
+            table.insert(self._connections, UserInputService.InputBegan:Connect(function(input, processed)
+                if processed then return end
+                if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == featureKey then
+                    if feature.IsToggle then
+                        feature.State = not feature.State
+                        featureCallback(feature.State)
+                    else
+                        featureCallback()
+                    end
+                end
+            end))
+        end
+
+        table.insert(self._customFeatures, feature)
+        return feature
+    end
 
     function Window:SaveConfig()
         if not self._saveConfig then return end
@@ -1221,15 +1461,12 @@ function KyuuLibrary:CreateWindow(config: {
         return data
     end
 
-    -- ━━━━━━━━━━━━━━ TAB CREATION ━━━━━━━━━━━━━━
-
-    function Window:CreateTab(name: string, icon: string?): any
+    function Window:CreateTab(name, icon)
         local tabData = {}
         tabData._name = name
         tabData._sections = {}
         tabData._layoutOrder = #self._tabs + 1
 
-        -- Tab button in sidebar
         local tabButton = Utility.Create("TextButton", {
             Parent = tabListScroll,
             Name = "Tab_" .. name,
@@ -1244,7 +1481,6 @@ function KyuuLibrary:CreateWindow(config: {
         })
         tabData._button = tabButton
 
-        -- Tab icon
         local textOffset = 12
         if icon and icon ~= "" then
             Utility.Create("ImageLabel", {
@@ -1261,7 +1497,6 @@ function KyuuLibrary:CreateWindow(config: {
             textOffset = 34
         end
 
-        -- Tab label
         local tabLabel = Utility.Create("TextLabel", {
             Parent = tabButton,
             Name = "Label",
@@ -1277,7 +1512,6 @@ function KyuuLibrary:CreateWindow(config: {
             ZIndex = 6,
         })
 
-        -- Active indicator
         local activeIndicator = Utility.Create("Frame", {
             Parent = tabButton,
             Name = "ActiveIndicator",
@@ -1291,7 +1525,6 @@ function KyuuLibrary:CreateWindow(config: {
         })
         table.insert(self._accentElements, activeIndicator)
 
-        -- Content scroll frame for this tab
         local tabContent = Utility.Create("ScrollingFrame", {
             Parent = contentArea,
             Name = "TabContent_" .. name,
@@ -1320,9 +1553,7 @@ function KyuuLibrary:CreateWindow(config: {
         })
         tabData._content = tabContent
 
-        -- Tab switching
         local function activateTab()
-            -- Deactivate all
             for _, otherTab in ipairs(self._tabs) do
                 otherTab._content.Visible = false
                 Utility.Tween(otherTab._button, { BackgroundTransparency = 1 }, 0.2)
@@ -1340,7 +1571,6 @@ function KyuuLibrary:CreateWindow(config: {
                 end
             end
 
-            -- Activate this
             tabContent.Visible = true
             Utility.Tween(tabButton, { BackgroundTransparency = 0.6 }, 0.2)
             Utility.Tween(tabLabel, { TextColor3 = theme.Text }, 0.2)
@@ -1360,7 +1590,6 @@ function KyuuLibrary:CreateWindow(config: {
 
         tabButton.MouseButton1Click:Connect(activateTab)
 
-        -- Hover
         tabButton.MouseEnter:Connect(function()
             if self._activeTab ~= tabData then
                 Utility.Tween(tabButton, { BackgroundTransparency = 0.75 }, 0.15)
@@ -1372,14 +1601,11 @@ function KyuuLibrary:CreateWindow(config: {
             end
         end)
 
-        -- Auto-activate first tab
         if #self._tabs == 0 then
             task.defer(activateTab)
         end
 
-        -- ━━━━━━━━━━━ SECTION CREATION ━━━━━━━━━━━
-
-        function tabData:CreateSection(sectionName: string): any
+        function tabData:CreateSection(sectionName)
             local section = {}
             section._elements = {}
             section._layoutOrder = #tabData._sections + 1
@@ -1388,14 +1614,14 @@ function KyuuLibrary:CreateWindow(config: {
                 Parent = tabContent,
                 Name = "Section_" .. sectionName,
                 BackgroundColor3 = theme.SecondaryBackground,
-                BackgroundTransparency = 0.3,
+                BackgroundTransparency = theme.ElementTransparency - 0.2,
                 Size = UDim2.new(1, 0, 0, 0),
                 AutomaticSize = Enum.AutomaticSize.Y,
                 LayoutOrder = section._layoutOrder,
                 ZIndex = 3,
             }, {
                 Utility.Create("UICorner", { CornerRadius = UDim.new(0, 10) }),
-                Utility.Create("UIStroke", { Color = theme.Border, Thickness = 1, Transparency = 0.6 }),
+                Utility.Create("UIStroke", { Color = theme.ElementStrokeColor, Thickness = 1, Transparency = theme.ElementStrokeTransparency }),
                 Utility.Create("UIPadding", {
                     PaddingTop = UDim.new(0, 32),
                     PaddingBottom = UDim.new(0, 10),
@@ -1409,7 +1635,6 @@ function KyuuLibrary:CreateWindow(config: {
             })
             section._frame = sectionFrame
 
-            -- Section header
             Utility.Create("TextLabel", {
                 Parent = sectionFrame,
                 Name = "Header",
@@ -1425,10 +1650,7 @@ function KyuuLibrary:CreateWindow(config: {
                 ZIndex = 4,
             })
 
-            -- ━━━━━━━━ ELEMENT FACTORIES ━━━━━━━━
-
-            -- TOGGLE
-            function section:CreateToggle(cfg: {Name: string?, Default: boolean?, Flag: string?, Callback: ((boolean) -> ())?}): any
+            function section:CreateToggle(cfg)
                 local toggleName = cfg.Name or "Toggle"
                 local default = cfg.Default or false
                 local callback = cfg.Callback or function() end
@@ -1439,12 +1661,17 @@ function KyuuLibrary:CreateWindow(config: {
                     Parent = sectionFrame,
                     Name = "Toggle_" .. toggleName,
                     BackgroundColor3 = theme.TertiaryBackground,
-                    BackgroundTransparency = 0.5,
+                    BackgroundTransparency = theme.ElementTransparency,
                     Size = UDim2.new(1, 0, 0, 38),
                     LayoutOrder = #section._elements + 1,
                     ZIndex = 4,
                 }, {
                     Utility.Create("UICorner", { CornerRadius = UDim.new(0, 8) }),
+                    Utility.Create("UIStroke", {
+                        Color = theme.GlassEnabled and Color3.fromRGB(255, 255, 255) or theme.ElementStrokeColor,
+                        Thickness = theme.GlassEnabled and 1 or 0,
+                        Transparency = theme.GlassEnabled and 0.5 or 1,
+                    }),
                 })
 
                 Utility.Create("TextLabel", {
@@ -1513,15 +1740,13 @@ function KyuuLibrary:CreateWindow(config: {
                     end
                 end)
 
-                -- Hover
                 toggleFrame.MouseEnter:Connect(function()
-                    Utility.Tween(toggleFrame, { BackgroundTransparency = 0.3 }, 0.15)
+                    Utility.Tween(toggleFrame, { BackgroundTransparency = theme.ElementTransparency - 0.2 }, 0.15)
                 end)
                 toggleFrame.MouseLeave:Connect(function()
-                    Utility.Tween(toggleFrame, { BackgroundTransparency = 0.5 }, 0.15)
+                    Utility.Tween(toggleFrame, { BackgroundTransparency = theme.ElementTransparency }, 0.15)
                 end)
 
-                -- Right-click context menu
                 toggleButton.MouseButton2Click:Connect(function()
                     CreateContextMenu(KyuuLibrary.ScreenGui, {
                         { Name = "Reset to Default", Callback = function()
@@ -1535,16 +1760,15 @@ function KyuuLibrary:CreateWindow(config: {
                     }, theme)
                 end)
 
-                -- Config
                 Window._configValues[flag] = function() return toggled end
 
                 local toggleObj = {}
-                function toggleObj:Set(value: boolean)
+                function toggleObj:Set(value)
                     toggled = value
                     updateVisual()
                     callback(toggled)
                 end
-                function toggleObj:Get(): boolean
+                function toggleObj:Get()
                     return toggled
                 end
 
@@ -1552,8 +1776,7 @@ function KyuuLibrary:CreateWindow(config: {
                 return toggleObj
             end
 
-            -- BUTTON
-            function section:CreateButton(cfg: {Name: string?, Callback: (() -> ())?}): any
+            function section:CreateButton(cfg)
                 local btnName = cfg.Name or "Button"
                 local callback = cfg.Callback or function() end
 
@@ -1561,12 +1784,17 @@ function KyuuLibrary:CreateWindow(config: {
                     Parent = sectionFrame,
                     Name = "Button_" .. btnName,
                     BackgroundColor3 = theme.TertiaryBackground,
-                    BackgroundTransparency = 0.5,
+                    BackgroundTransparency = theme.ElementTransparency,
                     Size = UDim2.new(1, 0, 0, 38),
                     LayoutOrder = #section._elements + 1,
                     ZIndex = 4,
                 }, {
                     Utility.Create("UICorner", { CornerRadius = UDim.new(0, 8) }),
+                    Utility.Create("UIStroke", {
+                        Color = theme.GlassEnabled and Color3.fromRGB(255, 255, 255) or theme.ElementStrokeColor,
+                        Thickness = theme.GlassEnabled and 1 or 0,
+                        Transparency = theme.GlassEnabled and 0.5 or 1,
+                    }),
                 })
 
                 local btn = Utility.Create("TextButton", {
@@ -1590,22 +1818,27 @@ function KyuuLibrary:CreateWindow(config: {
                 end)
 
                 buttonFrame.MouseEnter:Connect(function()
-                    Utility.Tween(buttonFrame, { BackgroundTransparency = 0.3 }, 0.15)
+                    Utility.Tween(buttonFrame, {
+                        BackgroundTransparency = theme.ElementTransparency - 0.2,
+                        BackgroundColor3 = theme.ButtonHover
+                    }, 0.15)
                 end)
                 buttonFrame.MouseLeave:Connect(function()
-                    Utility.Tween(buttonFrame, { BackgroundTransparency = 0.5 }, 0.15)
+                    Utility.Tween(buttonFrame, {
+                        BackgroundTransparency = theme.ElementTransparency,
+                        BackgroundColor3 = theme.TertiaryBackground
+                    }, 0.15)
                 end)
 
                 local buttonObj = {}
-                function buttonObj:SetText(text: string)
+                function buttonObj:SetText(text)
                     btn.Text = text
                 end
                 table.insert(section._elements, buttonObj)
                 return buttonObj
             end
 
-            -- SLIDER
-            function section:CreateSlider(cfg: {Name: string?, Min: number?, Max: number?, Increment: number?, Default: number?, Flag: string?, Callback: ((number) -> ())?}): any
+            function section:CreateSlider(cfg)
                 local sliderName = cfg.Name or "Slider"
                 local minVal = cfg.Min or 0
                 local maxVal = cfg.Max or 100
@@ -1619,12 +1852,17 @@ function KyuuLibrary:CreateWindow(config: {
                     Parent = sectionFrame,
                     Name = "Slider_" .. sliderName,
                     BackgroundColor3 = theme.TertiaryBackground,
-                    BackgroundTransparency = 0.5,
+                    BackgroundTransparency = theme.ElementTransparency,
                     Size = UDim2.new(1, 0, 0, 52),
                     LayoutOrder = #section._elements + 1,
                     ZIndex = 4,
                 }, {
                     Utility.Create("UICorner", { CornerRadius = UDim.new(0, 8) }),
+                    Utility.Create("UIStroke", {
+                        Color = theme.GlassEnabled and Color3.fromRGB(255, 255, 255) or theme.ElementStrokeColor,
+                        Thickness = theme.GlassEnabled and 1 or 0,
+                        Transparency = theme.GlassEnabled and 0.5 or 1,
+                    }),
                 })
 
                 Utility.Create("TextLabel", {
@@ -1703,7 +1941,7 @@ function KyuuLibrary:CreateWindow(config: {
 
                 local sliding = false
 
-                local function updateSlider(inputPos: number)
+                local function updateSlider(inputPos)
                     local absPos = sliderBg.AbsolutePosition.X
                     local absSize = sliderBg.AbsoluteSize.X
                     local relative = math.clamp((inputPos - absPos) / absSize, 0, 1)
@@ -1711,7 +1949,6 @@ function KyuuLibrary:CreateWindow(config: {
                     local snapped = math.floor(rawValue / increment + 0.5) * increment
                     snapped = math.clamp(snapped, minVal, maxVal)
 
-                    -- Handle floating point precision
                     if increment >= 1 then
                         snapped = math.floor(snapped + 0.5)
                     end
@@ -1742,15 +1979,13 @@ function KyuuLibrary:CreateWindow(config: {
                     end
                 end))
 
-                -- Hover
                 sliderFrame.MouseEnter:Connect(function()
-                    Utility.Tween(sliderFrame, { BackgroundTransparency = 0.3 }, 0.15)
+                    Utility.Tween(sliderFrame, { BackgroundTransparency = theme.ElementTransparency - 0.2 }, 0.15)
                 end)
                 sliderFrame.MouseLeave:Connect(function()
-                    Utility.Tween(sliderFrame, { BackgroundTransparency = 0.5 }, 0.15)
+                    Utility.Tween(sliderFrame, { BackgroundTransparency = theme.ElementTransparency }, 0.15)
                 end)
 
-                -- Context menu
                 sliderInput.MouseButton2Click:Connect(function()
                     CreateContextMenu(KyuuLibrary.ScreenGui, {
                         { Name = "Reset to Default", Callback = function()
@@ -1784,7 +2019,7 @@ function KyuuLibrary:CreateWindow(config: {
                 Window._configValues[flag] = function() return currentValue end
 
                 local sliderObj = {}
-                function sliderObj:Set(value: number)
+                function sliderObj:Set(value)
                     currentValue = math.clamp(value, minVal, maxVal)
                     local pct = (currentValue - minVal) / (maxVal - minVal)
                     Utility.Tween(sliderFill, { Size = UDim2.new(pct, 0, 1, 0) }, 0.15)
@@ -1792,7 +2027,7 @@ function KyuuLibrary:CreateWindow(config: {
                     valueLabel.Text = tostring(currentValue)
                     callback(currentValue)
                 end
-                function sliderObj:Get(): number
+                function sliderObj:Get()
                     return currentValue
                 end
 
@@ -1800,8 +2035,7 @@ function KyuuLibrary:CreateWindow(config: {
                 return sliderObj
             end
 
-            -- DROPDOWN (single + multi)
-            function section:CreateDropdown(cfg: {Name: string?, Options: {string}?, Default: any?, Multi: boolean?, Flag: string?, Callback: ((any) -> ())?}): any
+            function section:CreateDropdown(cfg)
                 local ddName = cfg.Name or "Dropdown"
                 local options = cfg.Options or {}
                 local isMulti = cfg.Multi or false
@@ -1825,7 +2059,7 @@ function KyuuLibrary:CreateWindow(config: {
                     Parent = sectionFrame,
                     Name = "Dropdown_" .. ddName,
                     BackgroundColor3 = theme.TertiaryBackground,
-                    BackgroundTransparency = 0.5,
+                    BackgroundTransparency = theme.ElementTransparency,
                     Size = UDim2.new(1, 0, 0, 38),
                     AutomaticSize = Enum.AutomaticSize.Y,
                     LayoutOrder = #section._elements + 1,
@@ -1833,9 +2067,13 @@ function KyuuLibrary:CreateWindow(config: {
                     ClipsDescendants = true,
                 }, {
                     Utility.Create("UICorner", { CornerRadius = UDim.new(0, 8) }),
+                    Utility.Create("UIStroke", {
+                        Color = theme.GlassEnabled and Color3.fromRGB(255, 255, 255) or theme.ElementStrokeColor,
+                        Thickness = theme.GlassEnabled and 1 or 0,
+                        Transparency = theme.GlassEnabled and 0.5 or 1,
+                    }),
                 })
 
-                -- Header area (always visible)
                 local ddHeader = Utility.Create("TextButton", {
                     Parent = ddFrame,
                     Name = "Header",
@@ -1860,7 +2098,7 @@ function KyuuLibrary:CreateWindow(config: {
                     ZIndex = 6,
                 })
 
-                local function getDisplayText(): string
+                local function getDisplayText()
                     if isMulti then
                         local items = {}
                         for opt, v in pairs(selected) do
@@ -1903,7 +2141,6 @@ function KyuuLibrary:CreateWindow(config: {
                     Rotation = 0,
                 })
 
-                -- Options container
                 local optionsContainer = Utility.Create("Frame", {
                     Parent = ddFrame,
                     Name = "Options",
@@ -1966,7 +2203,6 @@ function KyuuLibrary:CreateWindow(config: {
                             if isMulti then
                                 selected[opt] = not selected[opt]
                                 if not selected[opt] then selected[opt] = nil end
-                                -- Update visual
                                 local sel = selected[opt] == true
                                 Utility.Tween(optBtn, {
                                     BackgroundColor3 = sel and theme.Accent or theme.InputBackground,
@@ -1982,7 +2218,6 @@ function KyuuLibrary:CreateWindow(config: {
                             else
                                 selected = opt
                                 selectedLabel.Text = getDisplayText()
-                                -- Update all buttons
                                 for _, ob in ipairs(optionButtons) do
                                     local s = ob._opt == opt
                                     Utility.Tween(ob._btn, {
@@ -1992,7 +2227,6 @@ function KyuuLibrary:CreateWindow(config: {
                                     ob._btn.TextColor3 = s and theme.Text or theme.TextDark
                                 end
                                 callback(selected)
-                                -- Close dropdown
                                 task.delay(0.1, function()
                                     if dropdownOpen then
                                         ddHeader.MouseButton1Click:Fire()
@@ -2010,7 +2244,6 @@ function KyuuLibrary:CreateWindow(config: {
 
                 rebuildOptions()
 
-                -- Toggle dropdown
                 ddHeader.MouseButton1Click:Connect(function()
                     dropdownOpen = not dropdownOpen
                     optionsContainer.Visible = dropdownOpen
@@ -2027,12 +2260,11 @@ function KyuuLibrary:CreateWindow(config: {
                     end
                 end)
 
-                -- Hover
                 ddFrame.MouseEnter:Connect(function()
-                    Utility.Tween(ddFrame, { BackgroundTransparency = 0.3 }, 0.15)
+                    Utility.Tween(ddFrame, { BackgroundTransparency = theme.ElementTransparency - 0.2 }, 0.15)
                 end)
                 ddFrame.MouseLeave:Connect(function()
-                    Utility.Tween(ddFrame, { BackgroundTransparency = 0.5 }, 0.15)
+                    Utility.Tween(ddFrame, { BackgroundTransparency = theme.ElementTransparency }, 0.15)
                 end)
 
                 Window._configValues[flag] = function()
@@ -2047,7 +2279,7 @@ function KyuuLibrary:CreateWindow(config: {
                 end
 
                 local ddObj = {}
-                function ddObj:Set(value: any)
+                function ddObj:Set(value)
                     if isMulti then
                         selected = {}
                         if type(value) == "table" then
@@ -2060,7 +2292,7 @@ function KyuuLibrary:CreateWindow(config: {
                     rebuildOptions()
                     callback(isMulti and value or selected)
                 end
-                function ddObj:Get(): any
+                function ddObj:Get()
                     if isMulti then
                         local result = {}
                         for k, v in pairs(selected) do
@@ -2070,7 +2302,7 @@ function KyuuLibrary:CreateWindow(config: {
                     end
                     return selected
                 end
-                function ddObj:Refresh(newOptions: {string}, newDefault: any?)
+                function ddObj:Refresh(newOptions, newDefault)
                     options = newOptions
                     if newDefault ~= nil then
                         if isMulti then
@@ -2090,8 +2322,7 @@ function KyuuLibrary:CreateWindow(config: {
                 return ddObj
             end
 
-            -- INPUT
-            function section:CreateInput(cfg: {Name: string?, Placeholder: string?, Default: string?, Flag: string?, Callback: ((string) -> ())?}): any
+            function section:CreateInput(cfg)
                 local inputName = cfg.Name or "Input"
                 local placeholder = cfg.Placeholder or "Enter text..."
                 local default = cfg.Default or ""
@@ -2103,12 +2334,17 @@ function KyuuLibrary:CreateWindow(config: {
                     Parent = sectionFrame,
                     Name = "Input_" .. inputName,
                     BackgroundColor3 = theme.TertiaryBackground,
-                    BackgroundTransparency = 0.5,
+                    BackgroundTransparency = theme.ElementTransparency,
                     Size = UDim2.new(1, 0, 0, 38),
                     LayoutOrder = #section._elements + 1,
                     ZIndex = 4,
                 }, {
                     Utility.Create("UICorner", { CornerRadius = UDim.new(0, 8) }),
+                    Utility.Create("UIStroke", {
+                        Color = theme.GlassEnabled and Color3.fromRGB(255, 255, 255) or theme.ElementStrokeColor,
+                        Thickness = theme.GlassEnabled and 1 or 0,
+                        Transparency = theme.GlassEnabled and 0.5 or 1,
+                    }),
                 })
 
                 Utility.Create("TextLabel", {
@@ -2142,11 +2378,11 @@ function KyuuLibrary:CreateWindow(config: {
                     ZIndex = 6,
                 }, {
                     Utility.Create("UICorner", { CornerRadius = UDim.new(0, 6) }),
-                    Utility.Create("UIStroke", { Color = theme.Border, Thickness = 1, Transparency = 0.6 }),
+                    Utility.Create("UIStroke", { Color = theme.ElementStrokeColor, Thickness = 1, Transparency = theme.ElementStrokeTransparency }),
                     Utility.Create("UIPadding", { PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8) }),
                 })
 
-                textBox.FocusLost:Connect(function(enterPressed)
+                textBox.FocusLost:Connect(function()
                     currentText = textBox.Text
                     callback(currentText)
                 end)
@@ -2161,27 +2397,26 @@ function KyuuLibrary:CreateWindow(config: {
                 textBox.FocusLost:Connect(function()
                     local stroke = textBox:FindFirstChildOfClass("UIStroke")
                     if stroke then
-                        Utility.Tween(stroke, { Color = theme.Border, Transparency = 0.6 }, 0.15)
+                        Utility.Tween(stroke, { Color = theme.ElementStrokeColor, Transparency = theme.ElementStrokeTransparency }, 0.15)
                     end
                 end)
 
-                -- Hover
                 inputFrame.MouseEnter:Connect(function()
-                    Utility.Tween(inputFrame, { BackgroundTransparency = 0.3 }, 0.15)
+                    Utility.Tween(inputFrame, { BackgroundTransparency = theme.ElementTransparency - 0.2 }, 0.15)
                 end)
                 inputFrame.MouseLeave:Connect(function()
-                    Utility.Tween(inputFrame, { BackgroundTransparency = 0.5 }, 0.15)
+                    Utility.Tween(inputFrame, { BackgroundTransparency = theme.ElementTransparency }, 0.15)
                 end)
 
                 Window._configValues[flag] = function() return currentText end
 
                 local inputObj = {}
-                function inputObj:Set(value: string)
+                function inputObj:Set(value)
                     currentText = value
                     textBox.Text = value
                     callback(value)
                 end
-                function inputObj:Get(): string
+                function inputObj:Get()
                     return currentText
                 end
 
@@ -2189,8 +2424,7 @@ function KyuuLibrary:CreateWindow(config: {
                 return inputObj
             end
 
-            -- KEYBIND
-            function section:CreateKeybind(cfg: {Name: string?, Default: Enum.KeyCode?, Flag: string?, Callback: (() -> ())?}): any
+            function section:CreateKeybind(cfg)
                 local kbName = cfg.Name or "Keybind"
                 local default = cfg.Default or Enum.KeyCode.Unknown
                 local callback = cfg.Callback or function() end
@@ -2202,12 +2436,17 @@ function KyuuLibrary:CreateWindow(config: {
                     Parent = sectionFrame,
                     Name = "Keybind_" .. kbName,
                     BackgroundColor3 = theme.TertiaryBackground,
-                    BackgroundTransparency = 0.5,
+                    BackgroundTransparency = theme.ElementTransparency,
                     Size = UDim2.new(1, 0, 0, 38),
                     LayoutOrder = #section._elements + 1,
                     ZIndex = 4,
                 }, {
                     Utility.Create("UICorner", { CornerRadius = UDim.new(0, 8) }),
+                    Utility.Create("UIStroke", {
+                        Color = theme.GlassEnabled and Color3.fromRGB(255, 255, 255) or theme.ElementStrokeColor,
+                        Thickness = theme.GlassEnabled and 1 or 0,
+                        Transparency = theme.GlassEnabled and 0.5 or 1,
+                    }),
                 })
 
                 Utility.Create("TextLabel", {
@@ -2238,7 +2477,7 @@ function KyuuLibrary:CreateWindow(config: {
                     ZIndex = 6,
                 }, {
                     Utility.Create("UICorner", { CornerRadius = UDim.new(0, 6) }),
-                    Utility.Create("UIStroke", { Color = theme.Border, Thickness = 1, Transparency = 0.5 }),
+                    Utility.Create("UIStroke", { Color = theme.ElementStrokeColor, Thickness = 1, Transparency = 0.5 }),
                 })
 
                 keyButton.MouseButton1Click:Connect(function()
@@ -2252,7 +2491,6 @@ function KyuuLibrary:CreateWindow(config: {
                     if listening then
                         if input.UserInputType == Enum.UserInputType.Keyboard then
                             if input.KeyCode == Enum.KeyCode.Escape then
-                                -- Cancel
                                 listening = false
                                 keyButton.Text = currentKey.Name
                                 Utility.Tween(keyButton, { BackgroundColor3 = theme.InputBackground }, 0.15)
@@ -2272,22 +2510,21 @@ function KyuuLibrary:CreateWindow(config: {
                     end
                 end))
 
-                -- Hover
                 kbFrame.MouseEnter:Connect(function()
-                    Utility.Tween(kbFrame, { BackgroundTransparency = 0.3 }, 0.15)
+                    Utility.Tween(kbFrame, { BackgroundTransparency = theme.ElementTransparency - 0.2 }, 0.15)
                 end)
                 kbFrame.MouseLeave:Connect(function()
-                    Utility.Tween(kbFrame, { BackgroundTransparency = 0.5 }, 0.15)
+                    Utility.Tween(kbFrame, { BackgroundTransparency = theme.ElementTransparency }, 0.15)
                 end)
 
                 Window._configValues[flag] = function() return currentKey end
 
                 local kbObj = {}
-                function kbObj:Set(key: Enum.KeyCode)
+                function kbObj:Set(key)
                     currentKey = key
                     keyButton.Text = key.Name
                 end
-                function kbObj:Get(): Enum.KeyCode
+                function kbObj:Get()
                     return currentKey
                 end
 
@@ -2295,8 +2532,7 @@ function KyuuLibrary:CreateWindow(config: {
                 return kbObj
             end
 
-            -- COLORPICKER
-            function section:CreateColorpicker(cfg: {Name: string?, Default: Color3?, Flag: string?, Callback: ((Color3) -> ())?}): any
+            function section:CreateColorpicker(cfg)
                 local cpName = cfg.Name or "Colorpicker"
                 local default = cfg.Default or Color3.fromRGB(255, 0, 100)
                 local callback = cfg.Callback or function() end
@@ -2308,13 +2544,18 @@ function KyuuLibrary:CreateWindow(config: {
                     Parent = sectionFrame,
                     Name = "Colorpicker_" .. cpName,
                     BackgroundColor3 = theme.TertiaryBackground,
-                    BackgroundTransparency = 0.5,
+                    BackgroundTransparency = theme.ElementTransparency,
                     Size = UDim2.new(1, 0, 0, 38),
                     LayoutOrder = #section._elements + 1,
                     ZIndex = 4,
                     ClipsDescendants = true,
                 }, {
                     Utility.Create("UICorner", { CornerRadius = UDim.new(0, 8) }),
+                    Utility.Create("UIStroke", {
+                        Color = theme.GlassEnabled and Color3.fromRGB(255, 255, 255) or theme.ElementStrokeColor,
+                        Thickness = theme.GlassEnabled and 1 or 0,
+                        Transparency = theme.GlassEnabled and 0.5 or 1,
+                    }),
                 })
 
                 Utility.Create("TextLabel", {
@@ -2344,7 +2585,6 @@ function KyuuLibrary:CreateWindow(config: {
                     Utility.Create("UIStroke", { Color = theme.Border, Thickness = 1 }),
                 })
 
-                -- Picker panel (below the header)
                 local pickerPanel = Utility.Create("Frame", {
                     Parent = cpFrame,
                     Name = "PickerPanel",
@@ -2357,7 +2597,6 @@ function KyuuLibrary:CreateWindow(config: {
                     Utility.Create("UICorner", { CornerRadius = UDim.new(0, 8) }),
                 })
 
-                -- Hue gradient bar
                 local hueBar = Utility.Create("Frame", {
                     Parent = pickerPanel,
                     Name = "HueBar",
@@ -2380,7 +2619,6 @@ function KyuuLibrary:CreateWindow(config: {
                     }),
                 })
 
-                -- Saturation/Value field
                 local h, s, v = currentColor:ToHSV()
 
                 local svField = Utility.Create("Frame", {
@@ -2394,7 +2632,6 @@ function KyuuLibrary:CreateWindow(config: {
                     Utility.Create("UICorner", { CornerRadius = UDim.new(0, 6) }),
                 })
 
-                -- White gradient (left to right)
                 Utility.Create("UIGradient", {
                     Parent = svField,
                     Color = ColorSequence.new({
@@ -2407,8 +2644,7 @@ function KyuuLibrary:CreateWindow(config: {
                     }),
                 })
 
-                -- Black gradient overlay (top to bottom)
-                local blackOverlay = Utility.Create("Frame", {
+                Utility.Create("Frame", {
                     Parent = svField,
                     Name = "BlackOverlay",
                     BackgroundColor3 = Color3.fromRGB(0, 0, 0),
@@ -2425,7 +2661,6 @@ function KyuuLibrary:CreateWindow(config: {
                     }),
                 })
 
-                -- SV cursor
                 local svCursor = Utility.Create("Frame", {
                     Parent = svField,
                     Name = "Cursor",
@@ -2439,7 +2674,6 @@ function KyuuLibrary:CreateWindow(config: {
                     Utility.Create("UIStroke", { Color = Color3.fromRGB(0, 0, 0), Thickness = 1 }),
                 })
 
-                -- Hue cursor
                 local hueCursor = Utility.Create("Frame", {
                     Parent = hueBar,
                     Name = "Cursor",
@@ -2462,7 +2696,6 @@ function KyuuLibrary:CreateWindow(config: {
                     callback(currentColor)
                 end
 
-                -- SV field interaction
                 local svDragging = false
                 local svInput = Utility.Create("TextButton", {
                     Parent = svField,
@@ -2487,7 +2720,6 @@ function KyuuLibrary:CreateWindow(config: {
                     end
                 end))
 
-                -- Hue bar interaction
                 local hueDragging = false
                 local hueInput = Utility.Create("TextButton", {
                     Parent = hueBar,
@@ -2518,7 +2750,6 @@ function KyuuLibrary:CreateWindow(config: {
                     end
                 end))
 
-                -- Toggle picker
                 colorPreview.MouseButton1Click:Connect(function()
                     pickerOpen = not pickerOpen
                     pickerPanel.Visible = pickerOpen
@@ -2534,23 +2765,22 @@ function KyuuLibrary:CreateWindow(config: {
                     end
                 end)
 
-                -- Hover
                 cpFrame.MouseEnter:Connect(function()
-                    Utility.Tween(cpFrame, { BackgroundTransparency = 0.3 }, 0.15)
+                    Utility.Tween(cpFrame, { BackgroundTransparency = theme.ElementTransparency - 0.2 }, 0.15)
                 end)
                 cpFrame.MouseLeave:Connect(function()
-                    Utility.Tween(cpFrame, { BackgroundTransparency = 0.5 }, 0.15)
+                    Utility.Tween(cpFrame, { BackgroundTransparency = theme.ElementTransparency }, 0.15)
                 end)
 
                 Window._configValues[flag] = function() return currentColor end
 
                 local cpObj = {}
-                function cpObj:Set(color: Color3)
+                function cpObj:Set(color)
                     currentColor = color
                     h, s, v = color:ToHSV()
                     updateColor()
                 end
-                function cpObj:Get(): Color3
+                function cpObj:Get()
                     return currentColor
                 end
 
@@ -2558,8 +2788,7 @@ function KyuuLibrary:CreateWindow(config: {
                 return cpObj
             end
 
-            -- LABEL
-            function section:CreateLabel(text: string): any
+            function section:CreateLabel(text)
                 local labelFrame = Utility.Create("Frame", {
                     Parent = sectionFrame,
                     Name = "Label",
@@ -2584,15 +2813,14 @@ function KyuuLibrary:CreateWindow(config: {
                 })
 
                 local labelObj = {}
-                function labelObj:Set(newText: string)
+                function labelObj:Set(newText)
                     label.Text = newText
                 end
                 table.insert(section._elements, labelObj)
                 return labelObj
             end
 
-            -- PARAGRAPH
-            function section:CreateParagraph(cfg: {Title: string?, Content: string?}): any
+            function section:CreateParagraph(cfg)
                 local pTitle = cfg.Title or "Paragraph"
                 local pContent = cfg.Content or ""
 
@@ -2600,7 +2828,7 @@ function KyuuLibrary:CreateWindow(config: {
                     Parent = sectionFrame,
                     Name = "Paragraph_" .. pTitle,
                     BackgroundColor3 = theme.TertiaryBackground,
-                    BackgroundTransparency = 0.5,
+                    BackgroundTransparency = theme.ElementTransparency,
                     Size = UDim2.new(1, 0, 0, 0),
                     AutomaticSize = Enum.AutomaticSize.Y,
                     LayoutOrder = #section._elements + 1,
@@ -2650,7 +2878,7 @@ function KyuuLibrary:CreateWindow(config: {
                 })
 
                 local paraObj = {}
-                function paraObj:Set(cfg2: {Title: string?, Content: string?})
+                function paraObj:Set(cfg2)
                     if cfg2.Title then titleLbl.Text = cfg2.Title end
                     if cfg2.Content then contentLbl.Text = cfg2.Content end
                 end
@@ -2658,8 +2886,7 @@ function KyuuLibrary:CreateWindow(config: {
                 return paraObj
             end
 
-            -- SEPARATOR
-            function section:CreateSeparator(): any
+            function section:CreateSeparator()
                 local sep = Utility.Create("Frame", {
                     Parent = sectionFrame,
                     Name = "Separator",
@@ -2678,11 +2905,9 @@ function KyuuLibrary:CreateWindow(config: {
             return section
         end
 
-        -- SMALL SECTION (compact, restyled Section)
-        function tabData:CreateSmallSection(sectionName: string): any
+        function tabData:CreateSmallSection(sectionName)
             local sec = tabData:CreateSection(sectionName)
             local f = sec._frame
-            -- Restyle to be "small"
             if f then
                 local stroke = f:FindFirstChildOfClass("UIStroke")
                 if stroke then stroke.Thickness = 0 end
@@ -2700,26 +2925,15 @@ function KyuuLibrary:CreateWindow(config: {
         return tabData
     end
 
-    -- Load config on start if enabled
     if saveConfig then
         task.defer(function()
-            local data = Window:LoadConfig()
-            if data then
-                -- Apply loaded values
-                -- Elements need to register their setters for this to work
-                -- This is a basic implementation; full config restore would
-                -- iterate _configValues keys and call :Set() on matching elements
-            end
+            Window:LoadConfig()
         end)
     end
 
     table.insert(self.Windows, Window)
     return Window
 end
-
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--- LIBRARY DESTROY
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 function KyuuLibrary:Destroy()
     for _, window in ipairs(self.Windows) do
@@ -2733,6 +2947,7 @@ function KyuuLibrary:Destroy()
         end
     end
     self.Connections = {}
+    self.CustomKeybinds = {}
 
     if self.ScreenGui then
         self.ScreenGui:Destroy()
@@ -2740,13 +2955,8 @@ function KyuuLibrary:Destroy()
     end
 end
 
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--- REGISTER CUSTOM THEME
--- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function KyuuLibrary:RegisterTheme(name: string, themeData: {[string]: Color3})
+function KyuuLibrary:RegisterTheme(name, themeData)
     Themes[name] = themeData
 end
 
--- Return the library
 return KyuuLibrary

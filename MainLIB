@@ -1,4 +1,11 @@
-
+--[[
+    ╔══════════════════════════════════════════════════════════════╗
+    ║  KyuuLibrary v1.0.0 — Premium Roblox UI Library            ║
+    ║  A WindUI-inspired, feature-rich, production-ready library  ║
+    ║  Author: kyuuX | License: MIT                              ║
+    ║  Single-file loadable. No external dependencies.            ║
+    ╚══════════════════════════════════════════════════════════════╝
+--]]
 
 -- Services
 local Players = game:GetService("Players")
@@ -216,14 +223,14 @@ local Themes = {
 -- MAIN LIBRARY
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-local Kyuulibrary = {}
-Kyuulibrary.__index = Kyuulibrary
-Kyuulibrary.Windows = {}
-Kyuulibrary.Connections = {}
-Kyuulibrary.SoundsEnabled = true
-Kyuulibrary.AccentColor = Color3.fromRGB(0, 170, 255)
-Kyuulibrary.ScreenGui = nil
-Kyuulibrary.NotificationContainer = nil
+local KyuuLibrary = {}
+KyuuLibrary.__index = KyuuLibrary
+KyuuLibrary.Windows = {}
+KyuuLibrary.Connections = {}
+KyuuLibrary.SoundsEnabled = true
+KyuuLibrary.AccentColor = Color3.fromRGB(0, 170, 255)
+KyuuLibrary.ScreenGui = nil
+KyuuLibrary.NotificationContainer = nil
 
 -- File system compatibility
 local function writefileCompat(path: string, data: string)
@@ -257,7 +264,7 @@ end
 -- INITIALIZATION
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function Kyuulibrary:Init()
+function KyuuLibrary:Init()
     if self.ScreenGui then return end
 
     -- Determine parent
@@ -271,7 +278,7 @@ function Kyuulibrary:Init()
     end)
 
     self.ScreenGui = Utility.Create("ScreenGui", {
-        Name = "Kyuulibrary_" .. HttpService:GenerateGUID(false),
+        Name = "KyuuLibrary_" .. HttpService:GenerateGUID(false),
         Parent = guiParent,
         ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
         ResetOnSpawn = false,
@@ -311,7 +318,7 @@ end
 -- NOTIFICATIONS
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function Kyuulibrary:Notify(config: {Title: string?, Content: string?, Duration: number?, Type: string?})
+function KyuuLibrary:Notify(config: {Title: string?, Content: string?, Duration: number?, Type: string?})
     self:Init()
     local title = config.Title or "Notification"
     local content = config.Content or ""
@@ -471,7 +478,7 @@ end
 -- ACCENT COLOR
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function Kyuulibrary:SetAccentColor(color: Color3)
+function KyuuLibrary:SetAccentColor(color: Color3)
     self.AccentColor = color
     for _, window in ipairs(self.Windows) do
         if window._updateAccent then
@@ -587,7 +594,7 @@ end
 -- CREATE WINDOW
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function Kyuulibrary:CreateWindow(config: {
+function KyuuLibrary:CreateWindow(config: {
     Title: string?,
     SubTitle: string?,
     Icon: string?,
@@ -601,7 +608,7 @@ function Kyuulibrary:CreateWindow(config: {
 })
     self:Init()
 
-    local windowTitle = config.Title or "Kyuulibrary Window"
+    local windowTitle = config.Title or "KyuuLibrary Window"
     local subTitle = config.SubTitle or ""
     local windowIcon = config.Icon or ""
     local windowSize = config.Size or UDim2.new(0, 620, 0, 460)
@@ -609,7 +616,7 @@ function Kyuulibrary:CreateWindow(config: {
     local acrylicEnabled = config.Acrylic ~= false
     local minimizeKey = config.MinimizeKey or Enum.KeyCode.RightShift
     local saveConfig = config.SaveConfig or false
-    local configFolder = config.ConfigFolder or "Kyuulibrary"
+    local configFolder = config.ConfigFolder or "KyuuLibrary"
     local configName = config.ConfigName or "config.json"
 
     -- Window object
@@ -638,7 +645,7 @@ function Kyuulibrary:CreateWindow(config: {
     -- ━━━━━━━━━━━━━━ MAIN FRAME ━━━━━━━━━━━━━━
     local mainFrame = Utility.Create("Frame", {
         Parent = self.ScreenGui,
-        Name = "ZenithWindow",
+        Name = "KyuuWindow",
         BackgroundColor3 = theme.Background,
         Position = UDim2.new(0.5, 0, 0.5, 0),
         Size = windowSize,
@@ -1037,7 +1044,7 @@ function Kyuulibrary:CreateWindow(config: {
     watermarkUpdateConn = task.spawn(function()
         while not Window._destroyed do
             local playerName = LocalPlayer and LocalPlayer.Name or "Unknown"
-            watermarkLabel.Text = string.format("Kyuulibrary | %s | %d FPS | %s",
+            watermarkLabel.Text = string.format("KyuuLibrary | %s | %d FPS | %s",
                 windowTitle, fps, playerName)
             task.wait(0.5)
         end
@@ -1135,9 +1142,9 @@ function Kyuulibrary:CreateWindow(config: {
         end)
 
         -- Remove from windows list
-        for i, w in ipairs(Kyuulibrary.Windows) do
+        for i, w in ipairs(KyuuLibrary.Windows) do
             if w == self then
-                table.remove(Kyuulibrary.Windows, i)
+                table.remove(KyuuLibrary.Windows, i)
                 break
             end
         end
@@ -1346,7 +1353,7 @@ function Kyuulibrary:CreateWindow(config: {
 
             self._activeTab = tabData
 
-            if Kyuulibrary.SoundsEnabled then
+            if KyuuLibrary.SoundsEnabled then
                 Utility.AddSound("rbxassetid://6026984224", 0.15)
             end
         end
@@ -1490,7 +1497,7 @@ function Kyuulibrary:CreateWindow(config: {
 
                 local function updateVisual()
                     Utility.Tween(toggleBg, {
-                        BackgroundColor3 = toggled and (Kyuulibrary.AccentColor or theme.ToggleOn) or theme.ToggleOff
+                        BackgroundColor3 = toggled and (KyuuLibrary.AccentColor or theme.ToggleOn) or theme.ToggleOff
                     }, 0.2)
                     Utility.Tween(toggleCircle, {
                         Position = toggled and UDim2.new(1, -19, 0.5, 0) or UDim2.new(0, 3, 0.5, 0)
@@ -1501,7 +1508,7 @@ function Kyuulibrary:CreateWindow(config: {
                     toggled = not toggled
                     updateVisual()
                     callback(toggled)
-                    if Kyuulibrary.SoundsEnabled then
+                    if KyuuLibrary.SoundsEnabled then
                         Utility.AddSound("rbxassetid://6026984224", 0.2)
                     end
                 end)
@@ -1516,7 +1523,7 @@ function Kyuulibrary:CreateWindow(config: {
 
                 -- Right-click context menu
                 toggleButton.MouseButton2Click:Connect(function()
-                    CreateContextMenu(Kyuulibrary.ScreenGui, {
+                    CreateContextMenu(KyuuLibrary.ScreenGui, {
                         { Name = "Reset to Default", Callback = function()
                             toggled = default
                             updateVisual()
@@ -1577,7 +1584,7 @@ function Kyuulibrary:CreateWindow(config: {
                 btn.MouseButton1Click:Connect(function()
                     Utility.Ripple(buttonFrame, theme.Accent)
                     callback()
-                    if Kyuulibrary.SoundsEnabled then
+                    if KyuuLibrary.SoundsEnabled then
                         Utility.AddSound("rbxassetid://6026984224", 0.2)
                     end
                 end)
@@ -1745,7 +1752,7 @@ function Kyuulibrary:CreateWindow(config: {
 
                 -- Context menu
                 sliderInput.MouseButton2Click:Connect(function()
-                    CreateContextMenu(Kyuulibrary.ScreenGui, {
+                    CreateContextMenu(KyuuLibrary.ScreenGui, {
                         { Name = "Reset to Default", Callback = function()
                             currentValue = default
                             local pct = (currentValue - minVal) / (maxVal - minVal)
@@ -1992,7 +1999,7 @@ function Kyuulibrary:CreateWindow(config: {
                                     end
                                 end)
                             end
-                            if Kyuulibrary.SoundsEnabled then
+                            if KyuuLibrary.SoundsEnabled then
                                 Utility.AddSound("rbxassetid://6026984224", 0.15)
                             end
                         end)
@@ -2671,227 +2678,8 @@ function Kyuulibrary:CreateWindow(config: {
             return section
         end
 
-        -- SMALL SECTION (compact, no rounded container)
+        -- SMALL SECTION (compact, restyled Section)
         function tabData:CreateSmallSection(sectionName: string): any
-            local section = {}
-            section._elements = {}
-            section._layoutOrder = #tabData._sections + 1
-
-            local sectionFrame = Utility.Create("Frame", {
-                Parent = tabContent,
-                Name = "SmallSection_" .. sectionName,
-                BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, 0),
-                AutomaticSize = Enum.AutomaticSize.Y,
-                LayoutOrder = section._layoutOrder + 100,
-                ZIndex = 3,
-            }, {
-                Utility.Create("UIPadding", {
-                    PaddingTop = UDim.new(0, 4),
-                    PaddingBottom = UDim.new(0, 4),
-                    PaddingLeft = UDim.new(0, 4),
-                    PaddingRight = UDim.new(0, 4),
-                }),
-                Utility.Create("UIListLayout", {
-                    Padding = UDim.new(0, 4),
-                    SortOrder = Enum.SortOrder.LayoutOrder,
-                }),
-            })
-            section._frame = sectionFrame
-
-            -- Small section header
-            Utility.Create("TextLabel", {
-                Parent = sectionFrame,
-                Name = "Header",
-                BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, 16),
-                Text = "  " .. sectionName,
-                TextColor3 = theme.TextDimmed,
-                TextSize = 11,
-                Font = Enum.Font.GothamBold,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                LayoutOrder = 0,
-                ZIndex = 4,
-            })
-
-            -- SmallSection inherits all the same element factories
-            -- We copy them from the regular section pattern
-            -- For code efficiency, we reuse by creating a temporary normal section
-            -- and rebinding the parent
-            -- Instead, let's directly copy the factory functions
-
-            -- The small section will support the same element set.
-            -- We clone the factory by closure, pointing to the same sectionFrame.
-
-            local tempSection = tabData:CreateSection(sectionName .. "_temp")
-            -- Actually, let's just directly give it the methods.
-            -- Simplest approach: share by referencing the same factories
-            -- but pointed at sectionFrame.
-
-            -- Since the methods are defined as closures over sectionFrame, and
-            -- we have a different sectionFrame here, we need to re-define them.
-            -- But that's a LOT of code duplication. Instead, let's wrap:
-
-            -- Remove the temp section
-            if tempSection._frame then tempSection._frame:Destroy() end
-            for i, s2 in ipairs(tabData._sections) do
-                if s2 == tempSection then
-                    table.remove(tabData._sections, i)
-                    break
-                end
-            end
-
-            -- Manually add the factory functions by making section behave like
-            -- a full section internally. We'll use the pattern of having the same
-            -- create functions but with the small section's sectionFrame as parent.
-
-            -- For brevity and DRY, we'll create a helper that generates section methods.
-            -- Due to the closure-based nature, we'll do a compact version:
-
-            function section:CreateToggle(cfg2) return tabData:CreateSection(sectionName):_createToggleInternal(cfg2) end
-
-            -- Actually, the cleanest approach is: we just treat SmallSection as
-            -- identical to Section but with different visual wrapper. Let's
-            -- redefine the section but repoint the element parent to sectionFrame.
-
-            -- Let me take a different approach: make the section factories
-            -- standalone and pass the parent frame:
-
-            -- For production quality, I'll duplicate the necessary factory code
-            -- but operating on the smallSection's sectionFrame. Since the section
-            -- factories are closures that reference 'sectionFrame', the simplest
-            -- clean solution is:
-
-            -- Make smallSection delegate to a real section that we create but
-            -- re-parent its content layout into our frame.
-
-            local delegateSection = tabData:CreateSection("__delegate_" .. sectionName)
-            -- Move all children from delegate's frame into small section's frame
-            local delegateFrame = delegateSection._frame
-
-            -- We'll just reparent the delegate section children and hide the delegate frame
-            -- Actually, the simplest approach for a production library: just make SmallSection
-            -- have all the same methods. Let me do it properly.
-
-            -- Remove delegate
-            delegateFrame:Destroy()
-            for i, s2 in ipairs(tabData._sections) do
-                if s2 == delegateSection then
-                    table.remove(tabData._sections, i)
-                    break
-                end
-            end
-
-            -- Copy all element creation methods from the Section pattern
-            -- by creating a fresh section-like object that uses sectionFrame as parent.
-            -- We'll use a metatable trick:
-
-            local sectionMethods = {}
-
-            -- I'll define a stripped version of each factory here. Since they're
-            -- identical to the full section versions but reference a different
-            -- sectionFrame, the only change is the closure capture.
-
-            -- For absolute production quality with no duplication, let's define
-            -- a shared factory builder:
-
-            -- We'll actually just redirect: create a real Section but steal its frame
-            local realSection = tabData:CreateSection(sectionName)
-            -- The realSection._frame was created with the section visual wrapper.
-            -- We need to replace it with our simpler frame.
-            -- Reparent all of realSection._frame's children to sectionFrame.
-
-            -- Wait - CreateSection already added to tabContent. Let's just
-            -- restyle the realSection frame to look like a small section.
-
-            -- Remove the section we just created from _sections
-            for i = #tabData._sections, 1, -1 do
-                if tabData._sections[i] == realSection then
-                    table.remove(tabData._sections, i)
-                    break
-                end
-            end
-
-            -- Reparent realSection's frame children
-            realSection._frame:Destroy()
-
-            -- Give section the same methods as realSection by re-creating them
-            -- All methods on realSection reference realSection._frame (now destroyed)
-            -- This approach doesn't work cleanly.
-
-            -- FINAL APPROACH: Just copy the method code for SmallSection.
-            -- The methods are large but it's the only bulletproof way.
-            -- For now, SmallSection = CreateSection with modified styling.
-
-            sectionFrame:Destroy()
-
-            -- Recreate as a slightly different-looking section
-            local smallSectionFrame = Utility.Create("Frame", {
-                Parent = tabContent,
-                Name = "SmallSection_" .. sectionName,
-                BackgroundColor3 = theme.SecondaryBackground,
-                BackgroundTransparency = 0.5,
-                Size = UDim2.new(1, 0, 0, 0),
-                AutomaticSize = Enum.AutomaticSize.Y,
-                LayoutOrder = section._layoutOrder + 100,
-                ZIndex = 3,
-            }, {
-                Utility.Create("UICorner", { CornerRadius = UDim.new(0, 8) }),
-                Utility.Create("UIPadding", {
-                    PaddingTop = UDim.new(0, 24),
-                    PaddingBottom = UDim.new(0, 8),
-                    PaddingLeft = UDim.new(0, 10),
-                    PaddingRight = UDim.new(0, 10),
-                }),
-                Utility.Create("UIListLayout", {
-                    Padding = UDim.new(0, 4),
-                    SortOrder = Enum.SortOrder.LayoutOrder,
-                }),
-            })
-            section._frame = smallSectionFrame
-
-            Utility.Create("TextLabel", {
-                Parent = smallSectionFrame,
-                Name = "Header",
-                BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, 14),
-                Position = UDim2.new(0, 0, 0, -20),
-                Text = sectionName,
-                TextColor3 = theme.TextDimmed,
-                TextSize = 11,
-                Font = Enum.Font.GothamBold,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                LayoutOrder = 0,
-                ZIndex = 4,
-            })
-
-            -- Now we create the actual full section, passing the small section frame
-            -- as the parent. We do this by calling CreateSection and swapping frames.
-            local fullSection = tabData:CreateSection(sectionName)
-            -- fullSection has all methods and its _frame is created. We need to
-            -- redirect its _frame to smallSectionFrame.
-
-            -- Destroy fullSection's frame and remove from _sections
-            fullSection._frame:Destroy()
-            for i = #tabData._sections, 1, -1 do
-                if tabData._sections[i] == fullSection then
-                    table.remove(tabData._sections, i)
-                    break
-                end
-            end
-
-            -- The problem is fullSection's methods are closures over the OLD sectionFrame.
-            -- There's really no clean way without either:
-            -- 1) Defining methods in a shared way (refactoring the entire Section)
-            -- 2) Duplicating code
-
-            -- For production: SmallSection will simply call CreateSection and restyle.
-            -- Users barely distinguish SmallSection from Section visually.
-            -- Let me just make CreateSmallSection return a normal Section with slight visual differences.
-
-            smallSectionFrame:Destroy()
-
-            -- CLEAN FINAL VERSION:
             local sec = tabData:CreateSection(sectionName)
             local f = sec._frame
             -- Restyle to be "small"
@@ -2905,8 +2693,6 @@ function Kyuulibrary:CreateWindow(config: {
                     header.TextColor3 = theme.TextDimmed
                 end
             end
-
-            table.insert(tabData._sections, sec)
             return sec
         end
 
@@ -2935,7 +2721,7 @@ end
 -- LIBRARY DESTROY
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function Kyuulibrary:Destroy()
+function KyuuLibrary:Destroy()
     for _, window in ipairs(self.Windows) do
         window:Destroy()
     end
@@ -2958,9 +2744,9 @@ end
 -- REGISTER CUSTOM THEME
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function Kyuulibrary:RegisterTheme(name: string, themeData: {[string]: Color3})
+function KyuuLibrary:RegisterTheme(name: string, themeData: {[string]: Color3})
     Themes[name] = themeData
 end
 
 -- Return the library
-return Kyuulibrary
+return KyuuLibrary

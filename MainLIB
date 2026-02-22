@@ -1,11 +1,4 @@
---[[
-    ╔══════════════════════════════════════════════════════════════╗
-    ║  ZenithUI v1.0.0 — Premium Roblox UI Library               ║
-    ║  A WindUI-inspired, feature-rich, production-ready library  ║
-    ║  Author: zenithX | License: MIT                             ║
-    ║  Single-file loadable. No external dependencies.            ║
-    ╚══════════════════════════════════════════════════════════════╝
---]]
+
 
 -- Services
 local Players = game:GetService("Players")
@@ -223,14 +216,14 @@ local Themes = {
 -- MAIN LIBRARY
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-local ZenithUI = {}
-ZenithUI.__index = ZenithUI
-ZenithUI.Windows = {}
-ZenithUI.Connections = {}
-ZenithUI.SoundsEnabled = true
-ZenithUI.AccentColor = Color3.fromRGB(0, 170, 255)
-ZenithUI.ScreenGui = nil
-ZenithUI.NotificationContainer = nil
+local Kyuulibrary = {}
+Kyuulibrary.__index = Kyuulibrary
+Kyuulibrary.Windows = {}
+Kyuulibrary.Connections = {}
+Kyuulibrary.SoundsEnabled = true
+Kyuulibrary.AccentColor = Color3.fromRGB(0, 170, 255)
+Kyuulibrary.ScreenGui = nil
+Kyuulibrary.NotificationContainer = nil
 
 -- File system compatibility
 local function writefileCompat(path: string, data: string)
@@ -264,7 +257,7 @@ end
 -- INITIALIZATION
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function ZenithUI:Init()
+function Kyuulibrary:Init()
     if self.ScreenGui then return end
 
     -- Determine parent
@@ -278,7 +271,7 @@ function ZenithUI:Init()
     end)
 
     self.ScreenGui = Utility.Create("ScreenGui", {
-        Name = "ZenithUI_" .. HttpService:GenerateGUID(false),
+        Name = "Kyuulibrary_" .. HttpService:GenerateGUID(false),
         Parent = guiParent,
         ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
         ResetOnSpawn = false,
@@ -318,7 +311,7 @@ end
 -- NOTIFICATIONS
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function ZenithUI:Notify(config: {Title: string?, Content: string?, Duration: number?, Type: string?})
+function Kyuulibrary:Notify(config: {Title: string?, Content: string?, Duration: number?, Type: string?})
     self:Init()
     local title = config.Title or "Notification"
     local content = config.Content or ""
@@ -478,7 +471,7 @@ end
 -- ACCENT COLOR
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function ZenithUI:SetAccentColor(color: Color3)
+function Kyuulibrary:SetAccentColor(color: Color3)
     self.AccentColor = color
     for _, window in ipairs(self.Windows) do
         if window._updateAccent then
@@ -594,7 +587,7 @@ end
 -- CREATE WINDOW
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function ZenithUI:CreateWindow(config: {
+function Kyuulibrary:CreateWindow(config: {
     Title: string?,
     SubTitle: string?,
     Icon: string?,
@@ -608,7 +601,7 @@ function ZenithUI:CreateWindow(config: {
 })
     self:Init()
 
-    local windowTitle = config.Title or "ZenithUI Window"
+    local windowTitle = config.Title or "Kyuulibrary Window"
     local subTitle = config.SubTitle or ""
     local windowIcon = config.Icon or ""
     local windowSize = config.Size or UDim2.new(0, 620, 0, 460)
@@ -616,7 +609,7 @@ function ZenithUI:CreateWindow(config: {
     local acrylicEnabled = config.Acrylic ~= false
     local minimizeKey = config.MinimizeKey or Enum.KeyCode.RightShift
     local saveConfig = config.SaveConfig or false
-    local configFolder = config.ConfigFolder or "ZenithUI"
+    local configFolder = config.ConfigFolder or "Kyuulibrary"
     local configName = config.ConfigName or "config.json"
 
     -- Window object
@@ -1044,7 +1037,7 @@ function ZenithUI:CreateWindow(config: {
     watermarkUpdateConn = task.spawn(function()
         while not Window._destroyed do
             local playerName = LocalPlayer and LocalPlayer.Name or "Unknown"
-            watermarkLabel.Text = string.format("ZenithUI | %s | %d FPS | %s",
+            watermarkLabel.Text = string.format("Kyuulibrary | %s | %d FPS | %s",
                 windowTitle, fps, playerName)
             task.wait(0.5)
         end
@@ -1142,9 +1135,9 @@ function ZenithUI:CreateWindow(config: {
         end)
 
         -- Remove from windows list
-        for i, w in ipairs(ZenithUI.Windows) do
+        for i, w in ipairs(Kyuulibrary.Windows) do
             if w == self then
-                table.remove(ZenithUI.Windows, i)
+                table.remove(Kyuulibrary.Windows, i)
                 break
             end
         end
@@ -1353,7 +1346,7 @@ function ZenithUI:CreateWindow(config: {
 
             self._activeTab = tabData
 
-            if ZenithUI.SoundsEnabled then
+            if Kyuulibrary.SoundsEnabled then
                 Utility.AddSound("rbxassetid://6026984224", 0.15)
             end
         end
@@ -1497,7 +1490,7 @@ function ZenithUI:CreateWindow(config: {
 
                 local function updateVisual()
                     Utility.Tween(toggleBg, {
-                        BackgroundColor3 = toggled and (ZenithUI.AccentColor or theme.ToggleOn) or theme.ToggleOff
+                        BackgroundColor3 = toggled and (Kyuulibrary.AccentColor or theme.ToggleOn) or theme.ToggleOff
                     }, 0.2)
                     Utility.Tween(toggleCircle, {
                         Position = toggled and UDim2.new(1, -19, 0.5, 0) or UDim2.new(0, 3, 0.5, 0)
@@ -1508,7 +1501,7 @@ function ZenithUI:CreateWindow(config: {
                     toggled = not toggled
                     updateVisual()
                     callback(toggled)
-                    if ZenithUI.SoundsEnabled then
+                    if Kyuulibrary.SoundsEnabled then
                         Utility.AddSound("rbxassetid://6026984224", 0.2)
                     end
                 end)
@@ -1523,7 +1516,7 @@ function ZenithUI:CreateWindow(config: {
 
                 -- Right-click context menu
                 toggleButton.MouseButton2Click:Connect(function()
-                    CreateContextMenu(ZenithUI.ScreenGui, {
+                    CreateContextMenu(Kyuulibrary.ScreenGui, {
                         { Name = "Reset to Default", Callback = function()
                             toggled = default
                             updateVisual()
@@ -1584,7 +1577,7 @@ function ZenithUI:CreateWindow(config: {
                 btn.MouseButton1Click:Connect(function()
                     Utility.Ripple(buttonFrame, theme.Accent)
                     callback()
-                    if ZenithUI.SoundsEnabled then
+                    if Kyuulibrary.SoundsEnabled then
                         Utility.AddSound("rbxassetid://6026984224", 0.2)
                     end
                 end)
@@ -1752,7 +1745,7 @@ function ZenithUI:CreateWindow(config: {
 
                 -- Context menu
                 sliderInput.MouseButton2Click:Connect(function()
-                    CreateContextMenu(ZenithUI.ScreenGui, {
+                    CreateContextMenu(Kyuulibrary.ScreenGui, {
                         { Name = "Reset to Default", Callback = function()
                             currentValue = default
                             local pct = (currentValue - minVal) / (maxVal - minVal)
@@ -1999,7 +1992,7 @@ function ZenithUI:CreateWindow(config: {
                                     end
                                 end)
                             end
-                            if ZenithUI.SoundsEnabled then
+                            if Kyuulibrary.SoundsEnabled then
                                 Utility.AddSound("rbxassetid://6026984224", 0.15)
                             end
                         end)
@@ -2942,7 +2935,7 @@ end
 -- LIBRARY DESTROY
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function ZenithUI:Destroy()
+function Kyuulibrary:Destroy()
     for _, window in ipairs(self.Windows) do
         window:Destroy()
     end
@@ -2965,9 +2958,9 @@ end
 -- REGISTER CUSTOM THEME
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function ZenithUI:RegisterTheme(name: string, themeData: {[string]: Color3})
+function Kyuulibrary:RegisterTheme(name: string, themeData: {[string]: Color3})
     Themes[name] = themeData
 end
 
 -- Return the library
-return ZenithUI
+return Kyuulibrary
